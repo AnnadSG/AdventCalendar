@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Christmas Advent Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Grandstander:wght@600;800&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+/* VOICE everyday family tool with a festive, warm occasion feel
+   IDEA a real cardboard advent calendar: shuffled numbered doors you open each day
+   PICTURE the 24-door calendar itself, today's door glowing, opened doors starred
+   COLOUR pine green ground, berry red and paper white doors, gold accent
+   TYPE Grandstander (hand-lettered, playful) + Nunito
+   LAYOUT laptop: calendar left, open day right; phone: title, calendar, day below */
+:root{color-scheme:light dark;--bg:light-dark(#fbf7ef,#0c1f18);--ink:light-dark(#1d2620,#f2efe6);--pine:light-dark(#0f4a35,#0a2e21);--pine2:light-dark(#16613f,#123d2c);--berry:#c4232f;--gold:#e9b949;--paper:light-dark(#ffffff,#16291f);--line:light-dark(#e3dccd,#2a4236);--soft:light-dark(#5c6a61,#a9b8ae);--tint:light-dark(#f3ede0,#11271d)}
+:root[data-theme=light]{color-scheme:light}
+:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 Nunito,system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3{font-family:Grandstander,Nunito,sans-serif;line-height:1.05;letter-spacing:-.01em;margin:0;text-wrap:balance}
+.band{padding:clamp(24px,4vw,48px) max(5vw,16px)}
+.wrap{max-width:1240px;margin:0 auto}
+.top{background:var(--pine);color:#fff}
+.top h1{font-size:clamp(32px,5vw,50px)}
+.top p{margin:8px 0 0;color:#d9eadf;max-width:60ch}
+.hd{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:end;justify-content:space-between}
+.count{font-family:Grandstander,sans-serif;font-size:20px;color:var(--gold);white-space:nowrap}
+.ctrl{display:flex;flex-wrap:wrap;gap:12px 24px;margin-top:22px;align-items:center}
+.ctrl .lab{font-weight:800;font-size:14px;color:#cfe3d6}
+.seg{display:flex;flex-wrap:wrap;background:#0a3326;border-radius:999px;padding:4px;gap:2px}
+.seg button,.chip{font:inherit;font-weight:800;font-size:15px;border:0;cursor:pointer;min-height:40px;padding:6px 16px;border-radius:999px;background:transparent;color:#e7f2ea}
+.seg button[aria-pressed=true]{background:var(--gold);color:#2b1e00}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:2px solid #4f8a6c}
+.chip[aria-pressed=true]{background:#fff;color:var(--pine);border-color:#fff}
+button:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.main{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:28px;align-items:start}
+.cal{background:var(--pine2);border-radius:22px;padding:clamp(10px,1.6vw,18px);display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:clamp(6px,1vw,10px);box-shadow:inset 0 0 0 4px #0b3a29}
+.door{position:relative;aspect-ratio:1/1.12;border:0;border-radius:12px;cursor:pointer;font-family:Grandstander,sans-serif;font-size:clamp(24px,3.4vw,40px);font-weight:800;color:#fff;display:grid;place-items:center;transition:transform .15s;box-shadow:inset 0 -6px 0 rgba(0,0,0,.18),inset 0 2px 0 rgba(255,255,255,.25)}
+.door:hover{transform:translateY(-2px)}
+.door.c0{background:var(--berry)}
+.door.c1{background:#f6f1e4;color:var(--berry)}
+.door.c2{background:#2c7a52}
+.door.c3{background:#d9a23a;color:#3b2700}
+.door .wd{position:absolute;top:5px;left:0;right:0;font:800 11px Nunito,sans-serif;opacity:.8;text-align:center}
+.door.today{box-shadow:0 0 0 4px var(--gold),0 0 22px 4px rgba(233,185,73,.6)}
+.door.sel{transform:scale(.94);box-shadow:0 0 0 4px #fff}
+.door .st{position:absolute;right:5px;bottom:5px;width:24px;height:24px}
+@media (prefers-reduced-motion:no-preference){.door.today{animation:glow 2.4s ease-in-out infinite}@keyframes glow{50%{box-shadow:0 0 0 4px var(--gold),0 0 30px 10px rgba(233,185,73,.35)}}}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;color:var(--soft);margin-top:10px}
+.day{position:sticky;top:16px}
+.dayhd{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:12px}
+.dayhd h2{font-size:clamp(28px,3vw,38px)}
+.done{font:inherit;font-weight:800;min-height:44px;padding:8px 16px;border-radius:12px;border:2px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.done[aria-pressed=true]{background:var(--gold);border-color:var(--gold);color:#2b1e00}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:18px 20px;margin-bottom:14px}
+.card h3{font-size:24px;margin:4px 0 6px}
+.kind{display:flex;gap:8px;align-items:center;font-weight:800;font-size:14px;color:var(--berry)}
+.card.ne .kind{color:#2c7a52}
+.tag{display:inline-block;font-size:13px;font-weight:800;padding:2px 10px;border-radius:999px;background:var(--tint);color:var(--soft)}
+.setup{margin:8px 0;font-size:15px}
+.note{font-family:Grandstander,sans-serif;font-size:19px;background:var(--tint);border-radius:12px;padding:10px 14px;margin:10px 0}
+.ages{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:8px}
+.ages li{display:grid;grid-template-columns:5.2em minmax(0,1fr);gap:10px;align-items:baseline}
+.ages b{font-size:13px;white-space:nowrap;background:var(--pine);color:#fff;border-radius:8px;padding:2px 8px;text-align:center}
+.prs{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.pbtn{font:inherit;font-weight:800;font-size:14px;min-height:40px;padding:6px 14px;border-radius:10px;border:2px dashed var(--berry);background:transparent;color:var(--berry);cursor:pointer}
+.swap{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px;font-size:14px;color:var(--soft)}
+select{font:inherit;font-size:16px;min-height:40px;border-radius:10px;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:4px 8px;max-width:100%}
+.lang{color:#fff;font-weight:800;font-size:15px;border:2px solid #4f8a6c;border-radius:999px;padding:8px 16px;text-decoration:none;margin-left:auto}
+.lang:hover{background:#0a3326}
+.en,.pt{display:contents}
+html[lang=pt-PT] .en{display:none}
+html:not([lang=pt-PT]) .pt{display:none}
+.toprow{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.prog{height:10px;background:#0a3326;border-radius:99px;overflow:hidden;margin-top:10px;max-width:420px}
+.prog i{display:block;height:100%;width:0;background:var(--gold);border-radius:99px;transition:width .4s}
+.door .tk{position:absolute;right:5px;bottom:5px;width:22px;height:22px}
+.door.fin{filter:saturate(.75)}
+.badge{font-weight:800;font-size:14px;background:var(--gold);color:#2b1e00;border-radius:999px;padding:6px 12px;white-space:nowrap}
+.cf{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)}
+.chk{font:inherit;font-weight:800;font-size:16px;min-height:44px;display:inline-flex;align-items:center;gap:10px;padding:6px 16px 6px 8px;border-radius:12px;border:2px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.chk .bx{width:26px;height:26px;border-radius:8px;border:2px solid #2c7a52;display:grid;place-items:center;color:#fff;font-size:17px;line-height:1}
+.chk[aria-pressed=true]{border-color:#2c7a52;background:color-mix(in srgb,#2c7a52 12%,var(--paper))}
+.chk[aria-pressed=true] .bx{background:#2c7a52}
+.card.ok{border-color:#2c7a52;box-shadow:inset 6px 0 0 #2c7a52}
+.memo label{display:block;font-weight:800;margin-bottom:6px}
+.memo small{font-weight:600;color:var(--soft);margin-left:6px}
+textarea{width:100%;font:inherit;font-size:16px;border-radius:12px;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:10px 12px;resize:vertical}
+textarea:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.lang{margin-left:0}
+
+.top{position:relative;overflow:hidden;background:var(--pine) url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='90' height='90'><g stroke='%23ffffff' stroke-width='1.2' stroke-linecap='round' opacity='.09'><path d='M20 12v16M13 16l14 8M13 24l14-8'/><path d='M66 52v12M60 55l12 6M60 61l12-6'/></g></svg>");padding-bottom:64px}
+.top::before{content:"";position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(2.5px 2.5px at 20px 30px,#fff 60%,transparent),radial-gradient(2px 2px at 90px 140px,#fff 60%,transparent),radial-gradient(3px 3px at 160px 60px,#fff 60%,transparent),radial-gradient(2px 2px at 240px 180px,#fff 60%,transparent),radial-gradient(2.5px 2.5px at 300px 90px,#fff 60%,transparent);background-size:320px 220px;opacity:.55}
+@media (prefers-reduced-motion:no-preference){.top::before{animation:snow 14s linear infinite}@keyframes snow{to{background-position:40px 220px}}.lights i{animation:tw 1.6s ease-in-out infinite alternate}@keyframes tw{to{opacity:.25}}}
+.lights{position:absolute;left:0;right:0;bottom:6px;height:40px;background:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='40'><path d='M0 6Q60 26 120 6' fill='none' stroke='%23062a1c' stroke-width='2'/><rect x='27' y='13' width='6' height='5' rx='1' fill='%23333'/><ellipse cx='30' cy='24' rx='5.5' ry='8' fill='%23e8364a'/><rect x='87' y='13' width='6' height='5' rx='1' fill='%23333'/><ellipse cx='90' cy='24' rx='5.5' ry='8' fill='%23f2c14e'/></svg>") repeat-x}
+.lights i{position:absolute;inset:0;background:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='40'><rect x='57' y='15' width='6' height='5' rx='1' fill='%23333'/><ellipse cx='60' cy='27' rx='5.5' ry='8' fill='%2345c27a'/><rect x='117' y='5' width='6' height='5' rx='1' fill='%23333'/><ellipse cx='0' cy='16' rx='5.5' ry='8' fill='%235fb4ff'/></svg>") repeat-x}
+.hdgrid{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:end;position:relative}
+.helf{width:clamp(110px,16vw,190px);height:clamp(150px,21.7vw,258px);margin-bottom:-30px}
+body{background-image:url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='90' height='90'><g stroke='%230f4a35' stroke-width='1.2' stroke-linecap='round' opacity='.07'><path d='M20 12v16M13 16l14 8M13 24l14-8'/><path d='M66 52v12M60 55l12 6M60 61l12-6'/></g></svg>")}
+.calwrap{position:relative;padding-top:8px}
+.peek{position:absolute;right:18px;top:-58px;width:62px;height:84px;z-index:1}
+.cal{position:relative}
+.door.eve{background:var(--gold);color:#3b2700;box-shadow:inset 0 -6px 0 rgba(0,0,0,.18),0 0 0 3px #c4232f}
+.sech{display:flex;align-items:center;gap:10px}
+.sech svg{width:54px;height:36px;flex:none}
+.card{position:relative}
+.celf{position:absolute;right:12px;top:-8px;width:48px;height:65px}
+.card .kind,.card h3{padding-right:54px}
+.holly.ch{position:absolute;right:14px;top:12px;width:48px;height:32px}
+.prs{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+.pbtn{display:inline-flex;align-items:center;gap:8px;border-style:solid}
+.pbtn svg{width:18px;height:18px}
+.ptl{font-size:14px;color:var(--soft)}
+details.ans{margin-top:10px;font-size:15px;background:var(--tint);border-radius:10px;padding:8px 12px}
+details.ans summary,#answers summary{cursor:pointer;font-weight:800}
+#answers{margin-top:32px}
+#answers h3{font-size:26px;margin-bottom:4px}
+.agrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.agrid details{background:var(--paper);border-radius:12px;padding:10px 14px;border:1px solid var(--line)}
+.agrid ol{margin:8px 0 0;padding-left:20px;font-size:15px}
+.agrid p{margin:8px 0 0;font-size:15px}
+.pgrid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr))}
+.pcard{flex-direction:column}
+.pcard.big{grid-column:1/-1;background:var(--pine);color:#fff;border:0;position:relative;padding:20px 140px 20px 22px;min-height:150px}
+.pcard.big p{color:#d9eadf;max-width:60ch}
+.pcard.big h3{font-size:26px}
+.pelf{position:absolute;right:20px;bottom:8px;width:96px;height:130px}
+.btn.red{background:var(--berry)}
+.mbar .mp{font-size:14px;color:var(--soft)}
+@media(max-width:600px){.count{white-space:normal;font-size:17px;padding-right:90px}.hdgrid{grid-template-columns:minmax(0,1fr)}.helf{position:absolute;right:-6px;top:40px;width:84px;height:114px;margin:0}.top h1{padding-right:80px}.agrid{grid-template-columns:minmax(0,1fr)}.pcard.big{padding-right:22px}.pelf{display:none}}
+.calwrap .hc{position:absolute;width:70px;height:47px;z-index:1}.calwrap .h1{left:-16px;top:-10px}.calwrap .h2{right:-16px;bottom:-22px;transform:rotate(180deg)}
+.kids{display:flex;flex-wrap:wrap;gap:6px}
+.kid{display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--pine);font-weight:800;border-radius:999px;padding:4px 6px 4px 14px;min-height:40px}
+.kid small{font-weight:600;color:#557}
+.kid button{border:0;background:var(--tint);color:var(--ink);width:30px;height:30px;border-radius:50%;cursor:pointer;font:800 16px Nunito,sans-serif}
+.kform{display:flex;gap:6px;flex-wrap:wrap}
+.kform input{font:inherit;font-size:16px;min-height:40px;border-radius:999px;border:2px solid #4f8a6c;background:#0a3326;color:#fff;padding:4px 14px;width:9em}
+.kform input::placeholder{color:#a9c7b5}
+.kform select{border-radius:999px;background:#0a3326;color:#fff;border:2px solid #4f8a6c}
+.hi{font:800 22px Grandstander,Nunito,sans-serif;color:var(--berry);margin:0 0 4px}
+.kn{font-style:normal;font-weight:800;color:var(--berry)}
+.say{display:inline-flex;align-items:center;gap:6px;margin-left:10px;vertical-align:middle;font:800 14px Nunito,sans-serif;border:0;border-radius:999px;padding:6px 12px;min-height:36px;background:var(--pine);color:#fff;cursor:pointer}
+.say svg{width:18px;height:18px}
+.say[aria-pressed=true]{background:var(--berry)}
+.sec h2{font-size:clamp(30px,4vw,42px);margin-bottom:6px}
+.sec .lead{color:var(--soft);margin:0 0 20px;max-width:65ch}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.pcard{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.pcard h3{font-size:19px}
+.pcard p{margin:0;font-size:14px;color:var(--soft);flex:1}
+.pcard .row{display:flex;gap:6px;flex-wrap:wrap}
+.btn{font:inherit;font-weight:800;font-size:14px;min-height:40px;padding:6px 14px;border-radius:10px;border:0;background:var(--pine);color:#fff;cursor:pointer}
+.btn.alt{background:var(--tint);color:var(--ink)}
+.btn.big{font-size:16px;min-height:48px;padding:10px 20px;background:var(--berry)}
+.gband{background:var(--tint)}
+.agegrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.agec{background:var(--paper);border-radius:16px;padding:16px;border-top:8px solid var(--berry)}
+.agec:nth-child(2){border-color:#2c7a52}.agec:nth-child(3){border-color:var(--gold)}.agec:nth-child(4){border-color:var(--pine)}
+.agec h3{font-size:24px}.agec .sub{font-weight:800;color:var(--soft);font-size:14px;margin:2px 0 8px}
+.agec ul,.cols ul{margin:0;padding-left:18px;font-size:15px}.agec li,.cols li{margin-bottom:4px}
+.cols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:28px}
+.cols h3{font-size:22px;margin-bottom:8px}
+.modal{position:fixed;inset:0;background:rgba(5,20,14,.7);display:none;z-index:9;padding:16px}
+.modal.on{display:flex;flex-direction:column;align-items:center}
+.mbar{width:min(820px,100%);display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--paper);color:var(--ink);border-radius:14px 14px 0 0;padding:10px 14px}
+.mbar h3{flex:1;font-size:20px}
+.pv{width:min(820px,100%);flex:1;overflow:auto;background:#d8d2c4;border-radius:0 0 14px 14px;padding:12px}
+.pvin{transform-origin:0 0}
+.pvin .sheet{margin-bottom:12px;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.msg{font-size:14px;color:var(--soft);width:100%}
+.foot{font-size:14px;color:var(--soft);text-align:center;padding-bottom:40px}
+@media(max-width:900px){.main{grid-template-columns:minmax(0,1fr)}.day{position:static}.agegrid{grid-template-columns:repeat(2,minmax(0,1fr))}.cols{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){.cal{grid-template-columns:repeat(4,minmax(0,1fr))}.agegrid{grid-template-columns:minmax(0,1fr)}.seg button,.chip{padding:6px 12px;font-size:14px}}
+</style>
+<style id="sheetcss">
+.sheet{width:210mm;height:297mm;padding:14mm;background:#fff;color:#1b1b1b;font:12pt/1.45 Nunito,Arial,sans-serif;position:relative;overflow:hidden;break-after:page;page-break-after:always}
+.sheet *{box-sizing:border-box}
+.sheet .fr{position:absolute;inset:7mm;border:2.5px solid #c4232f;border-radius:6mm;pointer-events:none}
+.sheet .fr::after{content:"";position:absolute;inset:2mm;border:1px solid #0f4a35;border-radius:4.5mm}
+.sheet h1{font:800 28pt/1.05 Grandstander,'Comic Sans MS',sans-serif;color:#0f4a35;margin:2mm 0 2mm;letter-spacing:0}
+.sheet h2{font:800 16pt/1.1 Grandstander,'Comic Sans MS',sans-serif;color:#c4232f;margin:0 0 2mm}
+.sheet .sub{color:#555;margin:0 0 5mm;font-size:11pt}
+.sheet .g2{display:grid;grid-template-columns:1fr 1fr}
+.sheet .g3{display:grid;grid-template-columns:1fr 1fr 1fr}
+.sheet .g4{display:grid;grid-template-columns:repeat(4,1fr)}
+.sheet .cut{border:1.5px dashed #9a9a9a;padding:5mm;margin:-.75px;position:relative}
+.sheet .ln{border-bottom:1px solid #b5b5b5;height:9mm}
+.sheet .box{border:2px solid #0f4a35;border-radius:4mm}
+.sheet .note{font:800 17pt/1.2 Grandstander,'Comic Sans MS',sans-serif;color:#0f4a35}
+.sheet .cut .note{padding-right:14mm}
+.sheet .sig{font-style:italic;color:#c4232f;margin-top:3mm}
+.sheet .key{position:absolute;left:14mm;right:14mm;bottom:11mm;font-size:9pt;color:#777;border-top:1px dashed #bbb;padding-top:2mm}
+.sheet .pz{border:1.5px solid #d6d0c2;border-radius:4mm;padding:4mm 5mm;margin-bottom:4mm}
+.sheet .pz b{color:#c4232f}
+.sheet table{width:100%;border-collapse:collapse;font-size:10pt}
+.sheet td,.sheet th{border:1px solid #bbb;padding:1.6mm 2mm;text-align:left;vertical-align:top}
+.sheet th{background:#fff;color:#0f4a35;border-bottom:2px solid #0f4a35}
+.sheet .mir{transform:scaleX(-1);display:inline-block}
+.sheet .bingo td{height:40mm;text-align:center;vertical-align:middle;font:800 13pt Grandstander,sans-serif;color:#0f4a35}
+.sheet .blk{position:relative;overflow:hidden}
+.sheet .bl{font:800 9pt Nunito,sans-serif;color:#c4232f;margin-bottom:1.5mm;letter-spacing:.02em}
+.sheet .cutline{height:6mm;display:flex;align-items:center;gap:2mm;color:#999;font-size:9pt}
+.sheet .cutline::after{content:"";flex:1;border-top:1.5px dashed #aaa}
+.sheet .letter{display:flex;gap:5mm;align-items:center;border:1.5px dashed #9a9a9a;padding:4mm 5mm;border-radius:2mm}
+.sheet .holly{position:absolute;width:16mm;height:11mm;top:4mm}
+.sheet .hl{left:4mm}.sheet .hr{right:4mm;transform:scaleX(-1)}
+.sheet .cut{border-radius:2mm}
+.sheet .note{background:none;padding:0;margin:0;border-radius:0}
+.sheet [contenteditable]:focus{outline:none}
+</style>
+</head>
+<body>
+<svg id="defs" width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+<pattern id="stp" width="10" height="10" patternUnits="userSpaceOnUse"><rect width="10" height="5" fill="#c4232f"/><rect y="5" width="10" height="5" fill="#fff"/></pattern>
+<symbol id="elf" viewBox="0 0 140 190">
+<ellipse cx="70" cy="184" rx="40" ry="5" fill="#000" opacity=".15"/>
+<rect x="52" y="140" width="13" height="32" rx="6" fill="url(#stp)" stroke="#7a1b22" stroke-width="1"/>
+<rect x="76" y="140" width="13" height="32" rx="6" fill="url(#stp)" stroke="#7a1b22" stroke-width="1"/>
+<path d="M44 176q4-8 22-6 4 0 4 6 0 5-6 5H48q-8 0-12-7-1-4 3-4 3 0 5 6z" fill="#7a4520"/>
+<path d="M96 176q-4-8-22-6-4 0-4 6 0 5 6 5h16q8 0 12-7 1-4-3-4-3 0-5 6z" fill="#7a4520"/>
+<path d="M50 98Q70 90 90 98L106 146 97 140 88 147 79 140 70 147 61 140 52 147 43 140 34 146Z" fill="#2c8a5a"/>
+<path d="M78 95Q86 96 90 98L106 146 97 140 88 147 79 140Z" fill="#1f6b45"/>
+<rect x="42" y="122" width="58" height="8" rx="3" fill="#4a2c16"/>
+<rect x="64" y="120" width="12" height="12" rx="2" fill="none" stroke="#f2c14e" stroke-width="2.5"/>
+<path d="M52 104Q36 112 30 128" stroke="#2c8a5a" stroke-width="11" stroke-linecap="round" fill="none"/>
+<path d="M88 104Q104 100 110 84" stroke="#1f6b45" stroke-width="11" stroke-linecap="round" fill="none"/>
+<circle cx="29" cy="131" r="6" fill="#f7cfa8"/>
+<circle cx="111" cy="81" r="6" fill="#f7cfa8"/>
+<path d="M112 52l4.6 9.4 10.4 1.5-7.5 7.3 1.8 10.3-9.3-4.9-9.3 4.9 1.8-10.3-7.5-7.3 10.4-1.5z" fill="#f2c14e" stroke="#b07d12" stroke-width="1.2" stroke-linejoin="round"/>
+<path d="M47 96q23 10 46 0v9q-23 10-46 0z" fill="url(#stp)" stroke="#7a1b22" stroke-width="1"/>
+<path d="M82 102l6 24 9-3-5-22z" fill="url(#stp)" stroke="#7a1b22" stroke-width="1"/>
+<path d="M48 70L28 58 40 84Z" fill="#f2b896"/><path d="M92 70L112 58 100 84Z" fill="#f2b896"/>
+<circle cx="70" cy="74" r="24" fill="#f7cfa8"/>
+<path d="M58 54q12-8 26 0-6 6-13 4-7 3-13-4z" fill="#d9772b"/>
+<circle cx="58" cy="82" r="5" fill="#f19aa0" opacity=".7"/><circle cx="82" cy="82" r="5" fill="#f19aa0" opacity=".7"/>
+<ellipse cx="61" cy="72" rx="3" ry="4" fill="#2b1a10"/><ellipse cx="79" cy="72" rx="3" ry="4" fill="#2b1a10"/>
+<circle cx="62" cy="70.5" r="1.1" fill="#fff"/><circle cx="80" cy="70.5" r="1.1" fill="#fff"/>
+<circle cx="70" cy="79" r="3" fill="#ef9f84"/>
+<path d="M62 86q8 7 16 0" fill="none" stroke="#7a2e1e" stroke-width="2" stroke-linecap="round"/>
+<path d="M45 60Q46 24 86 14Q114 8 124 28Q104 22 96 36Q90 46 95 60Z" fill="#1f6b45"/>
+<path d="M58 30Q74 16 96 14" fill="none" stroke="#4fae7c" stroke-width="3" stroke-linecap="round"/>
+<rect x="42" y="54" width="56" height="13" rx="6.5" fill="#fff" stroke="#ddd"/>
+<circle cx="124" cy="32" r="7" fill="#f2c14e" stroke="#b07d12" stroke-width="1.2"/>
+</symbol>
+<symbol id="holly" viewBox="0 0 60 40">
+<path d="M30 22C24 10 12 6 2 10c6 2 6 8 2 10 6 0 8 6 4 10 8-2 16-2 22-8z" fill="#1f6b45"/>
+<path d="M30 22c6-12 18-16 28-12-6 2-6 8-2 10-6 0-8 6-4 10-8-2-16-2-22-8z" fill="#2c8a5a"/>
+<circle cx="26" cy="24" r="5" fill="#c4232f"/><circle cx="34" cy="24" r="5" fill="#d93a44"/><circle cx="30" cy="17" r="5" fill="#b51d28"/>
+<circle cx="28" cy="15.5" r="1.5" fill="#fff" opacity=".6"/>
+</symbol>
+</defs>
+</svg>
+
+<header class="top band">
+  <div class="wrap hdgrid"><div>
+    <div class="toprow">
+      <div class="count" id="count"></div>
+      <div class="seg" id="lang" role="group" aria-label="Language / Língua"><button data-lang="en" lang="en">English</button><button data-lang="pt" lang="pt-PT">Português</button></div>
+    </div>
+    <h1><span class="en">Our Christmas advent</span><span class="pt">O nosso calendário do Advento</span></h1>
+    <p><span class="en">A day-by-day guide for 1 to 24 December. Every day has an elf activity and a no-elf family activity, with versions for each age. Tick off what you did.</span><span class="pt">Um guia dia a dia de 1 a 24 de dezembro. Todos os dias têm uma atividade com o duende e uma atividade em família sem duende, com versões para cada idade. Marquem o que fizeram.</span></p>
+    <div class="prog" aria-hidden="true"><i id="bar"></i></div>
+    <div class="ctrl">
+      <span class="lab"><span class="en">Show</span><span class="pt">Mostrar</span></span>
+      <div class="seg" id="mode">
+        <button data-m="both"><span class="en">Elf and no-elf</span><span class="pt">Com e sem duende</span></button>
+        <button data-m="elf"><span class="en">Elf only</span><span class="pt">Só duende</span></button>
+        <button data-m="noelf"><span class="en">No elf</span><span class="pt">Sem duende</span></button>
+      </div>
+      <span class="lab"><span class="en">My children are</span><span class="pt">Idades dos filhos</span></span>
+      <div class="chips" id="ages"></div>
+      <span class="lab" id="kidsl"></span><div class="kids" id="kids"></div><div class="kform"><input id="kn" type="text" maxlength="30" autocomplete="off"><select id="ka" aria-label="Age"></select><button class="chip" id="kadd"></button></div>
+    </div>
+  </div><svg class="helf" role="img" aria-label="Elf"><use href="#elf"/></svg></div>
+  <div class="lights" aria-hidden="true"><i></i></div>
+</header>
+
+<main class="band">
+  <div class="wrap main">
+    <div>
+      <div class="calwrap"><svg class="hc h1" aria-hidden="true"><use href="#holly"/></svg><svg class="hc h2" aria-hidden="true"><use href="#holly"/></svg><svg class="peek" aria-hidden="true"><use href="#elf"/></svg><div class="cal" id="cal"></div></div>
+      <div class="legend"><span class="en"><span>Glowing door: today</span><span>Small tick: one activity done</span><span>Gold star: day complete</span></span><span class="pt"><span>Porta a brilhar: hoje</span><span>Visto pequeno: uma atividade feita</span><span>Estrela dourada: dia completo</span></span></div>
+    </div>
+    <section class="day" id="day" aria-live="polite"></section>
+  </div>
+</main>
+
+<section class="band sec" id="printables">
+  <div class="wrap">
+    <h2 class="sech"><svg aria-hidden="true"><use href="#holly"/></svg><span class="en">Printable sheets</span><span class="pt">Folhas para imprimir</span></h2>
+    <p class="lead"><span class="en">Each day’s activity has its own sheet, printed from the day above. Here are the extras and everything in one file. You can change any text on a sheet before printing.</span><span class="pt">Cada atividade tem a sua folha, que se imprime a partir do dia acima. Aqui estão os extras e tudo num só ficheiro. Podes mudar qualquer texto de uma folha antes de imprimir.</span></p>
+    <div class="pgrid" id="plist"></div>
+  </div>
+</section>
+
+<section class="band sec gband" id="guide">
+  <div class="wrap"><div class="en">
+    <h2 class="sech"><svg aria-hidden="true"><use href="#holly"/></svg>Parents’ guide</h2>
+    <p class="lead">Age groups are guides, not rules. Let a child pick an easier or harder version, and skip or swap days whenever you need to.</p>
+    <div class="agegrid">
+      <div class="agec"><h3>Ages 2–5</h3><div class="sub">Short, hands-on, lots of help</div><ul><li>Keep it to 10–15 minutes and stop while it’s still fun.</li><li>Offer two choices, not open questions.</li><li>Big pieces only: no tiny parts, strings, batteries, magnets or glitter.</li><li>Do puzzles aloud. Pointing and drawing count as answers.</li><li>Adults supervise all crafts, cooking and water play.</li></ul></div>
+      <div class="agec"><h3>Ages 6–8</h3><div class="sub">Missions, clues and making</div><ul><li>They love a job: “chief decorator”, “clue reader”.</li><li>Short reading and writing tasks build confidence.</li><li>Child-safe scissors and simple recipes with you.</li><li>Number codes and treasure hunts work well.</li><li>Praise effort and ideas, not neatness.</li></ul></div>
+      <div class="agec"><h3>Ages 9–12</h3><div class="sub">Let them lead a part</div><ul><li>Hand over real responsibility: scoring, timing, planning.</li><li>Harder puzzles, ciphers and fair-test experiments.</li><li>If they question the elf, invite them to be an elf assistant.</li><li>They can help younger siblings with the 2–5 version.</li><li>Give them a little privacy for surprise projects.</li></ul></div>
+      <div class="agec"><h3>Ages 13+</h3><div class="sub">Organiser, director, secret elf</div><ul><li>Ask, don’t require. A helper role often appeals more than joining in.</li><li>Good jobs: playlists, photos, hosting games, writing clues.</li><li>Let them run a “secret elf” mission for the younger ones.</li><li>Phone-friendly tasks are fine; agree not to post family photos without asking.</li><li>One-on-one time can matter more than the activity.</li></ul></div>
+    </div>
+    <div class="cols">
+      <div><h3>A kind elf</h3><ul><li>The elf doesn’t spy, threaten presents or punish behaviour.</li><li>Every mystery is pretend and friendly.</li><li>Set up after bedtime, the night before. Each elf card says what to lay out.</li><li>Washable supplies only; skip big flour or glitter messes.</li><li>Forgot to move the elf? “He was so cosy he stayed put.”</li></ul></div>
+      <div><h3>Mixed ages, one activity</h3><ul><li>Run the same activity and give each child their age version.</li><li>Pair an older child with a younger one as a team.</li><li>Do the noisy or active ones before dinner, calm ones at bedtime.</li><li>Busy day? Pick a 5-minute elf scene: 1, 3, 5, 8, 11, 15, 19, 22 or 27.</li><li>Weekends suit longer activities like baking or the gingerbread house.</li></ul></div>
+      <div><h3>Handy kit</h3><ul><li>Paper, card, pens, washable crayons, tape, child-safe scissors.</li><li>Envelopes, stickers, cotton wool, ribbon, clean cardboard.</li><li>Socks, plastic cups, building blocks, a toy car, soft toys.</li><li>A torch for the lights walk, a mirror for the elf’s message.</li><li>Hot drinks: let them cool before little hands get them.</li></ul></div>
+    </div>
+  </div><div class="pt">
+    <h2 class="sech"><svg aria-hidden="true"><use href="#holly"/></svg>Guia para os pais</h2>
+    <p class="lead">As idades são uma orientação, não uma regra. Deixa a criança escolher uma versão mais fácil ou mais difícil, e salta ou troca dias sempre que precisares.</p>
+    <div class="agegrid">
+      <div class="agec"><h3>2–5 anos</h3><div class="sub">Curto, prático, com muita ajuda</div><ul><li>10 a 15 minutos chegam. Para enquanto ainda é divertido.</li><li>Oferece duas opções em vez de perguntas abertas.</li><li>Só peças grandes: nada de peças pequenas, fios, pilhas, ímanes ou purpurinas.</li><li>Faz os enigmas em voz alta. Apontar e desenhar também são respostas.</li><li>Um adulto acompanha trabalhos manuais, cozinha e brincadeiras com água.</li></ul></div>
+      <div class="agec"><h3>6–8 anos</h3><div class="sub">Missões, pistas e mãos na massa</div><ul><li>Adoram ter um cargo: “decorador-chefe”, “leitor de pistas”.</li><li>Pequenas tarefas de leitura e escrita dão confiança.</li><li>Tesoura de pontas redondas e receitas simples contigo.</li><li>Códigos de números e caças ao tesouro resultam muito bem.</li><li>Elogia o esforço e as ideias, não a perfeição.</li></ul></div>
+      <div class="agec"><h3>9–12 anos</h3><div class="sub">Deixa-os liderar uma parte</div><ul><li>Dá responsabilidades a sério: pontos, tempos, planeamento.</li><li>Enigmas mais difíceis, cifras e experiências justas.</li><li>Se duvidarem do duende, convida-os a serem assistentes do duende.</li><li>Podem ajudar os irmãos mais novos com a versão dos 2–5.</li><li>Dá-lhes alguma privacidade para projetos-surpresa.</li></ul></div>
+      <div class="agec"><h3>13+ anos</h3><div class="sub">Organizador, realizador, duende secreto</div><ul><li>Convida, não obrigues. Um papel de ajudante muitas vezes agrada mais.</li><li>Boas tarefas: playlists, fotos, apresentar jogos, escrever pistas.</li><li>Deixa-os fazer uma missão de “duende secreto” para os mais novos.</li><li>Tarefas com telemóvel estão bem; combinem não publicar fotos da família sem perguntar.</li><li>Tempo a sós contigo pode valer mais do que a atividade.</li></ul></div>
+    </div>
+    <div class="cols">
+      <div><h3>Um duende simpático</h3><ul><li>O duende não espia, não ameaça as prendas nem castiga.</li><li>Todos os mistérios são a fingir e amigáveis.</li><li>Monta a cena depois de as crianças se deitarem, na noite anterior. Cada cartão diz o que preparar.</li><li>Só materiais laváveis; evita grandes confusões com farinha ou purpurinas.</li><li>Esqueceste-te de mudar o duende? “Estava tão quentinho que ficou.”</li></ul></div>
+      <div><h3>Idades misturadas, uma atividade</h3><ul><li>Faz a mesma atividade e dá a cada criança a versão da sua idade.</li><li>Junta um mais velho com um mais novo numa equipa.</li><li>Atividades agitadas antes do jantar, calmas à hora de deitar.</li><li>Dia complicado? Escolhe uma cena de 5 minutos: 1, 3, 5, 8, 11, 15, 19, 22 ou 27.</li><li>O fim de semana é bom para atividades longas, como as bolachas ou a casa de gengibre.</li></ul></div>
+      <div><h3>Kit útil</h3><ul><li>Papel, cartolina, canetas, lápis de cera laváveis, fita-cola, tesoura de pontas redondas.</li><li>Envelopes, autocolantes, algodão, fita, cartão limpo.</li><li>Meias, copos de plástico, blocos de construção, um carrinho, peluches.</li><li>Uma lanterna para o passeio das luzes, um espelho para a mensagem do duende.</li><li>Bebidas quentes: deixa arrefecer antes de chegarem às mãos pequenas.</li></ul></div>
+    </div>
+  </div><div id="answers"></div></div>
+</section>
+<p class="foot band"><span class="en">Activities adapted from your “24 Days of Christmas Magic” calendar and “The Christmas Elf” activity book. Ages 9–12 versions of the no-elf days are new additions.</span><span class="pt">Atividades adaptadas do teu calendário “24 Days of Christmas Magic” e do livro “The Christmas Elf”. As versões dos 9–12 anos das atividades sem duende são novas. Enigmas, rimas e códigos foram adaptados para português.</span></p>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mt">
+  <div class="mbar"><h3 id="mt"></h3><span class="mp" id="mp"></span><button class="btn alt" id="rs" hidden><span class="en">Undo my changes</span><span class="pt">Desfazer as minhas alterações</span></button><button class="btn big" id="dl"><span class="en">Download to print</span><span class="pt">Descarregar para imprimir</span></button><button class="btn alt" id="mx"><span class="en">Close</span><span class="pt">Fechar</span></button><div class="msg" id="mmsg"></div></div>
+  <div class="pv" id="pv"><div class="pvin" id="pvin"></div></div>
+</div>
+<script>
+{
+
+const AGES=[["a","2–5"],["b","6–8"],["c","9–12"],["d","13+"]];
+const DEF=[1,2,3,27,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,30];
+const ORDER=Array.from({length:24},(_,i)=>i+1);
+const wd=d=>new Date(2026,11,d).getDay();
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+let st={lang:/^pt/i.test(navigator.language||"")?"pt":"en",mode:"both",ages:["a","b"],done:{},swap:{},sel:0,edits:{}};
+try{const v=JSON.parse(localStorage.getItem("advent2026v2")||"null");if(v)st=Object.assign(st,v)}catch(e){}
+const save=()=>{try{localStorage.setItem("advent2026v2",JSON.stringify(st))}catch(e){}};
+const now=new Date();
+const todayD=(now.getFullYear()===2026&&now.getMonth()===11&&now.getDate()<=24)?now.getDate():0;
+if(!st.sel)st.sel=todayD||1;
+const scene=d=>st.swap[d]||DEF[d-1];
+const rec=d=>Object.assign({},st.done[d]||{});
+const dayState=d=>{const r=rec(d),k=st.mode==="elf"?["e"]:st.mode==="noelf"?["n"]:["e","n"],c=k.filter(x=>r[x]).length;return c===k.length?2:(c||r.e||r.n)?1:0};
+const doneMark=d=>dayState(d)===2?"✓":"";
+const star='<svg class="st" viewBox="0 0 24 24"><path d="M12 1.5l3.1 6.6 7.2.9-5.3 5 1.4 7.1L12 17.6 5.6 21.1 7 14 1.7 9l7.2-.9z" fill="#ffd257" stroke="#7a5400" stroke-width="1.2"/></svg>';
+const LANG={};
+LANG.en=(()=>{
+const WD=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const WDL=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const S=[
+["Welcome from the North Pole","Sit the elf beside an envelope and a pencil. Leave the arrival letter.",["Choose an elf name and wave hello.","Write three possible elf names and vote.","Create a short elf biography with a secret talent.","Write a witty welcome announcement in the elf’s voice."],"I have arrived! Will you give me a name?","5 min","letters"],
+["Paper snowstorm","Scatter a few large paper snowflakes near the elf.",["Decorate one big snowflake.","Cut or colour three different snowflakes.","Design a symmetrical six-point snowflake.","Create a geometric snowflake pattern and explain its symmetry."],"I made a tiny snowstorm. Can you improve it?","Craft"],
+["Toy tea party","Seat the elf with stuffed animals and empty cups.",["Count the guests and say hello.","Write a tiny menu with two drinks and snacks.","Plan seating so every guest has a different neighbour.","Write a comic dialogue between the guests."],"My guests are hungry for imagination!","5 min"],
+["Sock snowballs","Put rolled-up socks in a basket by the elf.",["Toss soft socks into a laundry basket.","Score 1, 2 or 3 points from different lines.","Invent a scoring system and track five rounds.","Calculate percentages or design a fair tournament."],"Snowball practice starts now!","Movement"],
+["Elf in a book","Place the elf peeking out of a Christmas book.",["Find a picture of a star.","Read a page and find five winter words.","Write a different ending to the story.","Review the story in exactly 50 words."],"A story is a doorway to magic.","5 min"],
+["Kindness post office","Leave a paper mailbox and blank cards.",["Draw a heart for someone.","Write a thank-you note.","Write a specific compliment to three people.","Create anonymous appreciation notes for family members."],"Today we deliver kindness.","Kindness","coupons"],
+["Hidden red ribbons","Hide five broad red paper strips in safe, visible spots.",["Find two ribbons with help.","Follow three location clues.","Solve a short rhyming clue chain.","Write a new clue trail for the younger children."],"Can you find my Christmas trail?","Movement","clues"],
+["Banana faces","Draw washable funny faces on banana peels.",["Choose the happiest face.","Name the emotions and draw another.","Create a four-panel banana comic.","Write a funny social-media-style caption (don’t post it)."],"These bananas have personalities!","5 min"],
+["Bridge for the elf","Put blocks beside a small gap between two books.",["Build a bridge using big blocks.","Build a bridge that holds a toy.","Compare two bridge shapes and record results.","Design a bridge with material limits and justify it."],"I need to cross the canyon!","STEM"],
+["Elf art studio","Set out crayons and paper with an unfinished drawing.",["Finish a Christmas tree drawing.","Draw a winter scene using four colours.","Make a poster for the North Pole art show.","Create a minimalist poster with a slogan and constraints."],"My masterpiece needs a collaborator.","Craft","colour"],
+["Teddy hospital","Wrap a toy’s paw loosely with a fabric strip; the elf is the doctor.",["Give teddy a gentle check-up.","Write a kind get-well card.","Invent a fictional patient chart.","Write a funny but caring medical report."],"Doctor Elf needs a helper.","5 min"],
+["Floor-is-lava mission","Arrange cushions as stepping stones on a clear floor.",["Step between two cushions with help.","Cross the path without touching the floor.","Design a safe route with five steps.","Create a timed obstacle challenge with safety rules."],"The carpet has become lava!","Movement"],
+["Recycled ornament workshop","Place clean cardboard shapes, tape and ribbon nearby.",["Colour a large cardboard star.","Make a hanging ornament with help.","Make an ornament from only three materials.","Design an eco-friendly ornament and estimate material waste."],"Let us turn leftovers into treasure.","Craft"],
+["Cup tower disaster","Set the elf beside a toppled stack of plastic cups.",["Stack three large cups.","Build a tower of six cups.","Find the tallest stable design and measure it.","Explain the tower’s centre of mass and test stability."],"My tower fell. Engineers wanted!","STEM"],
+["Mirror message","Leave the mirror-message card next to a mirror.",["Find the star sticker beside the mirror.","Use a mirror to read a short reversed word.","Decode a full mirrored sentence.","Write a reversed message for another child."],"The mirror knows a secret.","5 min","mirror"],
+["Christmas colour hunt","The elf holds cards showing red, green, gold and white.",["Find one red object.","Find two objects of each colour.","Photograph a four-colour scavenger collection.","Create a colour-based riddle hunt for siblings."],"The colours have escaped!","Movement"],
+["Mini theatre","Put the elf behind a cardboard stage with toy actors.",["Make a toy say Merry Christmas.","Perform a 30-second puppet scene.","Write a three-scene mini play.","Direct a two-minute comedy with a plot twist."],"The North Pole theatre opens tonight.","Craft"],
+["Ice rescue","Freeze a large washable toy in a tub of water; adult supervises.",["Watch an adult melt the ice with warm water.","Predict whether warm or cool water melts ice faster.","Time two safe melting methods and compare.","Explain heat transfer and design a controlled experiment."],"My friend is trapped in ice!","STEM"],
+["Elf’s lost hat","Hide a paper hat close to the elf.",["Spot the hat in plain sight.","Follow a picture clue to the hat.","Solve two location riddles.","Create a logic clue for the hat’s hiding place."],"I cannot go outside without my hat!","5 min","clues"],
+["Dance freeze","The elf holds a paper sign saying DANCE.",["Dance and freeze when the music stops.","Invent three Christmas dance moves.","Choreograph eight counts and teach them.","Create a short routine mixing contrasting dance styles."],"I challenge you to a dance-off!","Movement"],
+["Secret recipe","Leave a pretend recipe card and measuring cups.",["Pretend to stir snowflake soup.","Measure dry rice or oats with adult help.","Double a simple biscuit recipe on paper.","Scale a recipe to 1.5 times and convert units."],"The bakery needs a new recipe.","Craft"],
+["Christmas cinema","The elf sits with a paper ticket and a popcorn drawing.",["Pick a festive film and cuddle.","Make a ticket and choose the film.","Write a three-question film quiz.","Write a short film review or design a trailer storyboard."],"One ticket for a cosy night!","5 min","tickets"],
+["North Pole code","The elf holds the code sheet and its alphabet key.",["Match picture symbols to colours.","Decode a simple letter-number word.","Solve a Caesar-shift message.","Invent a substitution cipher with a clear key."],"Only codebreakers can read this!","STEM","code"],
+["Marshmallow maths","Lay out paper marshmallow drawings rather than real sweets.",["Count five marshmallow pictures.","Make addition sums with ten pictures.","Solve multiplication and grouping puzzles.","Model combinations of three toppings or flavours."],"My cocoa needs some maths.","Movement"],
+["Sleigh ramp test","Prop up a cardboard ramp with a toy car at the top.",["Watch the toy roll with help.","Test two different ramp heights.","Measure travel distance across three trials.","Control variables and graph ramp height against distance."],"My sleigh needs a test track.","STEM"],
+["Christmas postcard","The elf leaves a blank postcard.",["Draw a tree for a loved one.","Write a greeting and decorate the card.","Write a postcard from an imaginary winter town.","Write a postcard from 100 years in the future."],"Send a little Christmas joy.","Craft","postcard"],
+["Toy detective","Arrange three toys; one holds a paper clue.",["Point to the toy holding the star.","Find which toy has the secret note.","Use three clues to identify a suspect.","Build a deduction puzzle with one valid solution."],"One toy knows where the star went.","5 min","clues"],
+["Star constellation","Place paper stars in a simple pattern.",["Connect three large stars with a finger.","Copy a five-star pattern.","Invent a constellation and its legend.","Map a coordinate-based constellation and calculate distances."],"I found a new sky picture!","STEM"],
+["Good deed challenge","The elf holds three kindness coupons.",["Give a hug if someone wants one.","Help tidy a shared space.","Do a useful chore without being asked.","Plan a practical act of service, with consent and privacy."],"The best magic is kindness.","Kindness","coupons"],
+["Goodbye, until next year","The elf waits with the goodbye letter and paper stars.",["Wave goodbye and keep a star.","Draw your favourite elf memory.","Write a top-five elf moments list.","Make a photo-free family yearbook page of elf highlights."],"Thank you for a magical December!","Craft","letters"]];
+const N=[
+["Decorate the tree",["Hang big felt ornaments.","Arrange decorations by colour.","Plan a colour theme and hang the lights with an adult.","Style the tree and take a family photo."],"colour"],
+["Christmas dance party",["Copy simple dance moves.","Invent a reindeer dance.","Choreograph a short routine for the family.","Make a festive playlist and lead the dancing."]],
+["Make Christmas cards",["Add large stickers or handprints.","Draw and write a greeting.","Make pop-up cards and address the envelopes.","Design cards and write personal messages."]],
+["Indoor snowball games",["Toss soft rolled-up socks.","Aim at numbered baskets.","Keep score over five rounds and crown a champion.","Build a family target challenge."]],
+["Bake festive biscuits",["Press shapes into dough.","Cut shapes and decorate the cooled biscuits.","Read the recipe aloud and weigh the ingredients.","Measure ingredients and help with the baking."]],
+["Christmas lights walk",["Spot lights and stars.","Find five festive shapes.","Tick off the lights bingo and lead the way.","Plan the route and photograph favourite displays."],"bingo"],
+["Make paper snowflakes",["Stick on pre-cut paper shapes.","Fold and cut with child-safe scissors.","Fold six-point snowflakes and compare the patterns.","Create intricate snowflakes or a window display."]],
+["Christmas story night",["Point to pictures and make sounds.","Read a few lines aloud.","Read a chapter aloud to a younger sibling.","Read dramatically or invent a festive story."]],
+["Build a Christmas village",["Stack large blocks to make houses.","Make houses from cardboard.","Add paper-cup street lamps and a road map.","Design the layout and add paper scenery."]],
+["Kindness day",["Help put toys away.","Choose a toy or book to donate.","Sort outgrown clothes and toys to donate.","Organise a family donation or write a kind note."],"coupons"],
+["Reindeer obstacle course",["Step over cushions with help.","Follow a simple obstacle route.","Set up three stations and time each run.","Design and time a safe indoor course."]],
+["Make tree ornaments",["Press handprints into soft dough.","Shape and paint ornaments.","Make salt-dough ornaments and paint fine details.","Create personalised keepsake ornaments."]],
+["Christmas treasure hunt",["Find large objects with picture clues.","Solve simple written clues.","Solve rhyming clues and help the little ones.","Write clues and hide the treasures."],"clues"],
+["Hot chocolate cinema",["Choose a favourite festive toy to watch with.","Make cinema tickets.","Run the box office: tickets, seats and a snack menu.","Pick a family film and prepare the snacks."],"tickets"],
+["Festive music challenge",["Shake a toddler-safe instrument.","Guess a song from humming.","Play a carol on any instrument or app.","Run a Christmas music quiz."]],
+["Build a gingerbread house",["Place large decorations with help.","Decorate the walls and roof.","Pipe icing to glue the walls and roof.","Assemble the house and design the details."]],
+["Christmas science lab",["Watch ice melt in a bowl.","Predict which ice cube melts first.","Test salt, sugar and plain water on ice cubes.","Set up a fair test and explain the results."]],
+["Family photo booth",["Choose a soft festive hat.","Make funny poses and paper props.","Make paper props and a frame sign.","Set up the camera and create a photo collage."]],
+["Wrap a surprise",["Decorate paper with washable crayons.","Wrap a small gift with help.","Wrap a gift neatly and make a matching tag.","Design reusable wrapping or gift tags."]],
+["Christmas postcard adventure",["Spot Christmas trees wherever you are.","Draw a festive scene from the day.","Write a postcard to a grandparent and post it.","Take a photo and write a travel-style caption."],"postcard"],
+["Make a family wish jar",["Say or draw a happy wish.","Write a wish for someone else.","Write wishes for three different people.","Write a meaningful wish for the coming year."],"wish"],
+["Christmas charades",["Act like a reindeer or penguin.","Mime festive words for others.","Act out film and song titles.","Invent trickier clues and host the game."],"charades"],
+["Remember the good moments",["Choose a favourite family photo.","Draw a happy memory from this year.","Make a top-ten list of the year.","Create a mini year-in-review collage."],"memories"],
+["Christmas Eve magic",["Put out a soft toy and say goodnight.","Leave a drawing or note for Santa.","Lay out the stockings and write a note for Santa.","Help set the festive table and start a family tradition."],"santa"]];
+const dateL=d=>WDL[wd(d)]+" "+d+" December";
+return {S,N,WD,WDL,dateL,head:d=>dateL(d)}})();
+LANG.pt=(()=>{
+const WD=["dom","seg","ter","qua","qui","sex","sáb"];
+const WDL=["domingo","segunda-feira","terça-feira","quarta-feira","quinta-feira","sexta-feira","sábado"];
+const S=[
+["Chegada do Polo Norte","Senta o duende ao lado de um envelope e de um lápis. Deixa a carta de chegada.",["Escolher um nome para o duende e acenar olá.","Escrever três nomes possíveis e votar.","Criar uma pequena biografia do duende com um talento secreto.","Escrever um anúncio de boas-vindas divertido na voz do duende."],"Cheguei! Dão-me um nome?","5 min","letters"],
+["Tempestade de papel","Espalha alguns flocos de neve grandes de papel perto do duende.",["Decorar um floco de neve grande.","Recortar ou colorir três flocos diferentes.","Desenhar um floco simétrico de seis pontas.","Criar um padrão geométrico de floco e explicar a simetria."],"Fiz uma pequena tempestade de neve. Conseguem melhorá-la?","Criatividade"],
+["Chá dos peluches","Senta o duende com peluches e chávenas vazias.",["Contar os convidados e dizer olá.","Escrever um pequeno menu com duas bebidas e lanches.","Planear os lugares para cada convidado ter um vizinho diferente.","Escrever um diálogo cómico entre os convidados."],"Os meus convidados têm fome de imaginação!","5 min"],
+["Bolas de neve de meias","Põe meias enroladas num cesto ao lado do duende.",["Atirar meias macias para o cesto da roupa.","Marcar 1, 2 ou 3 pontos a partir de linhas diferentes.","Inventar um sistema de pontos e registar cinco rondas.","Calcular percentagens ou criar um torneio justo."],"O treino de bolas de neve começa agora!","Movimento"],
+["Duende no livro","Põe o duende a espreitar de dentro de um livro de Natal.",["Encontrar a imagem de uma estrela.","Ler uma página e encontrar cinco palavras de inverno.","Escrever outro final para a história.","Resumir a história em exatamente 50 palavras."],"Uma história é uma porta para a magia.","5 min"],
+["Correio da bondade","Deixa uma caixa de correio de papel e cartões em branco.",["Desenhar um coração para alguém.","Escrever um bilhete de agradecimento.","Escrever um elogio concreto a três pessoas.","Criar bilhetes anónimos de apreço para a família."],"Hoje entregamos bondade.","Bondade","coupons"],
+["Fitas vermelhas escondidas","Esconde cinco tiras largas de papel vermelho em sítios seguros e visíveis.",["Encontrar duas fitas com ajuda.","Seguir três pistas de lugares.","Resolver uma pequena cadeia de pistas em rima.","Escrever um novo percurso de pistas para os mais novos."],"Conseguem encontrar o meu trilho de Natal?","Movimento","clues"],
+["Bananas com cara","Desenha caras engraçadas com marcador lavável nas cascas de banana.",["Escolher a cara mais feliz.","Dar nome às emoções e desenhar outra.","Criar uma banda desenhada de quatro vinhetas com bananas.","Escrever uma legenda divertida tipo redes sociais (sem publicar)."],"Estas bananas têm personalidade!","5 min"],
+["Ponte para o duende","Põe blocos ao lado de um pequeno espaço entre dois livros.",["Construir uma ponte com blocos grandes.","Construir uma ponte que aguente um brinquedo.","Comparar duas formas de ponte e registar os resultados.","Projetar uma ponte com materiais limitados e justificar."],"Preciso de atravessar o desfiladeiro!","Ciência"],
+["Atelier do duende","Deixa lápis de cera e papel com um desenho por acabar.",["Acabar o desenho de uma árvore de Natal.","Desenhar uma paisagem de inverno com quatro cores.","Fazer um cartaz para a exposição de arte do Polo Norte.","Criar um cartaz minimalista com um slogan e regras."],"A minha obra-prima precisa de um colaborador.","Criatividade","colour"],
+["Hospital dos peluches","Enrola uma tira de tecido, sem apertar, na pata de um peluche; o duende é o médico.",["Fazer uma consulta suave ao peluche.","Escrever um cartão de melhoras.","Inventar uma ficha clínica a fingir.","Escrever um relatório médico divertido mas carinhoso."],"O Doutor Duende precisa de um ajudante.","5 min"],
+["O chão é lava","Coloca almofadas como pedras num chão livre.",["Passar de uma almofada para outra com ajuda.","Atravessar sem tocar no chão.","Desenhar um percurso seguro com cinco passos.","Criar um desafio cronometrado com regras de segurança."],"O tapete transformou-se em lava!","Movimento"],
+["Oficina de enfeites reciclados","Deixa formas de cartão limpo, fita-cola e fita por perto.",["Colorir uma estrela grande de cartão.","Fazer um enfeite para pendurar com ajuda.","Fazer um enfeite com só três materiais.","Desenhar um enfeite ecológico e estimar o desperdício."],"Vamos transformar restos em tesouros.","Criatividade"],
+["Torre de copos caída","Põe o duende ao lado de uma pilha de copos de plástico tombada.",["Empilhar três copos grandes.","Construir uma torre de seis copos.","Encontrar a torre estável mais alta e medi-la.","Explicar o centro de massa da torre e testar a estabilidade."],"A minha torre caiu. Precisam-se engenheiros!","Ciência"],
+["Mensagem ao espelho","Deixa o cartão da mensagem ao espelho junto a um espelho.",["Encontrar o autocolante de estrela junto ao espelho.","Usar um espelho para ler uma palavra invertida.","Decifrar uma frase inteira ao espelho.","Escrever uma mensagem invertida para outra criança."],"O espelho guarda um segredo.","5 min","mirror"],
+["Caça às cores","O duende segura cartões vermelho, verde, dourado e branco.",["Encontrar um objeto vermelho.","Encontrar dois objetos de cada cor.","Fotografar uma coleção com as quatro cores.","Criar uma caça às cores com adivinhas para os irmãos."],"As cores fugiram!","Movimento"],
+["Mini teatro","Põe o duende atrás de um palco de cartão com brinquedos como atores.",["Pôr um brinquedo a dizer Feliz Natal.","Fazer uma cena de fantoches de 30 segundos.","Escrever uma peça curta com três cenas.","Encenar uma comédia de dois minutos com uma reviravolta."],"O teatro do Polo Norte abre esta noite.","Criatividade"],
+["Resgate no gelo","Congela um brinquedo lavável grande numa caixa com água; um adulto supervisiona.",["Ver um adulto derreter o gelo com água morna.","Prever se a água morna ou a fria derrete o gelo mais depressa.","Cronometrar dois métodos seguros e comparar.","Explicar a transferência de calor e planear uma experiência controlada."],"O meu amigo ficou preso no gelo!","Ciência"],
+["O gorro perdido","Esconde um gorro de papel perto do duende.",["Encontrar o gorro à vista.","Seguir uma pista em desenho até ao gorro.","Resolver duas adivinhas de lugares.","Criar uma pista lógica para o esconderijo do gorro."],"Não posso sair sem o meu gorro!","5 min","clues"],
+["Dança e estátua","O duende segura um cartaz a dizer DANÇA.",["Dançar e ficar estátua quando a música para.","Inventar três passos de dança de Natal.","Coreografar oito tempos e ensiná-los.","Criar uma coreografia curta com estilos contrastantes."],"Desafio-vos para um duelo de dança!","Movimento"],
+["Receita secreta","Deixa uma receita a fingir e copos medidores.",["Fingir mexer uma sopa de flocos de neve.","Medir arroz ou aveia com a ajuda de um adulto.","Duplicar uma receita simples de bolachas no papel.","Multiplicar uma receita por 1,5 e converter unidades."],"A pastelaria precisa de uma receita nova.","Criatividade"],
+["Cinema de Natal","O duende está sentado com um bilhete de papel e um desenho de pipocas.",["Escolher um filme de Natal e ficar no aconchego.","Fazer um bilhete e escolher o filme.","Escrever um quiz de três perguntas sobre o filme.","Escrever uma crítica curta ou desenhar o storyboard de um trailer."],"Um bilhete para uma noite aconchegante!","5 min","tickets"],
+["Código do Polo Norte","O duende segura a folha do código e a chave do alfabeto.",["Associar símbolos desenhados a cores.","Decifrar uma palavra simples em código de números.","Resolver uma mensagem com a cifra de César.","Inventar uma cifra de substituição com uma chave clara."],"Só os decifradores conseguem ler isto!","Ciência","code"],
+["Matemática dos marshmallows","Usa desenhos de marshmallows em papel em vez de doces a sério.",["Contar cinco marshmallows desenhados.","Fazer somas com dez desenhos.","Resolver problemas de multiplicação e de grupos.","Calcular combinações de três coberturas ou sabores."],"O meu chocolate quente precisa de matemática.","Movimento"],
+["Teste da rampa do trenó","Monta uma rampa de cartão com um carrinho no topo.",["Ver o carrinho descer com ajuda.","Testar duas alturas de rampa.","Medir a distância em três tentativas.","Controlar variáveis e fazer um gráfico altura vs. distância."],"O meu trenó precisa de uma pista de testes.","Ciência"],
+["Postal de Natal","O duende deixa um postal em branco.",["Desenhar uma árvore para alguém querido.","Escrever uma mensagem e decorar o postal.","Escrever um postal de uma vila de inverno imaginária.","Escrever um postal de daqui a 100 anos."],"Enviem um pouco de alegria de Natal.","Criatividade","postcard"],
+["Detetive dos brinquedos","Põe três brinquedos lado a lado; um deles segura uma pista de papel.",["Apontar para o brinquedo que tem a estrela.","Descobrir que brinquedo tem o bilhete secreto.","Usar três pistas para descobrir o suspeito.","Construir um enigma de dedução com uma só solução."],"Um brinquedo sabe onde está a estrela.","5 min","clues"],
+["Constelação","Coloca estrelas de papel num padrão simples.",["Ligar três estrelas grandes com o dedo.","Copiar um padrão de cinco estrelas.","Inventar uma constelação e a sua lenda.","Mapear uma constelação com coordenadas e calcular distâncias."],"Descobri um novo desenho no céu!","Ciência"],
+["Desafio da boa ação","O duende segura três vales de bondade.",["Dar um abraço a quem quiser.","Ajudar a arrumar um espaço comum.","Fazer uma tarefa útil sem ninguém pedir.","Planear um gesto de ajuda, com respeito e privacidade."],"A melhor magia é a bondade.","Bondade","coupons"],
+["Adeus, até para o ano","O duende espera com a carta de despedida e estrelas de papel.",["Dizer adeus e guardar uma estrela.","Desenhar a recordação preferida do duende.","Escrever o top cinco dos momentos do duende.","Criar uma página de álbum da família com os melhores momentos (sem fotos)."],"Obrigado por um dezembro mágico!","Criatividade","letters"]];
+const N=[
+["Enfeitar a árvore",["Pendurar enfeites grandes de feltro.","Organizar os enfeites por cores.","Escolher as cores da árvore e pôr as luzes com um adulto.","Decorar a árvore com estilo e tirar uma foto de família."],"colour"],
+["Festa de dança de Natal",["Imitar passos de dança simples.","Inventar a dança da rena.","Coreografar uma dança curta para a família.","Criar uma playlist de Natal e liderar a dança."]],
+["Fazer postais de Natal",["Pôr autocolantes grandes ou marcas das mãos.","Desenhar e escrever uma mensagem.","Fazer postais pop-up e escrever os envelopes.","Desenhar postais e escrever mensagens pessoais."]],
+["Jogos de bolas de neve em casa",["Atirar meias enroladas.","Fazer pontaria a cestos numerados.","Marcar pontos em cinco rondas e coroar o campeão.","Criar um desafio de pontaria para a família."]],
+["Fazer bolachas de Natal",["Carregar com formas na massa.","Cortar formas e decorar as bolachas já frias.","Ler a receita em voz alta e pesar os ingredientes.","Medir os ingredientes e ajudar a cozinhar."]],
+["Passeio das luzes de Natal",["Descobrir luzes e estrelas.","Encontrar cinco formas de Natal.","Completar o bingo das luzes e guiar o caminho.","Planear o percurso e fotografar as decorações preferidas."],"bingo"],
+["Flocos de neve de papel",["Colar formas de papel já recortadas.","Dobrar e recortar com tesoura de pontas redondas.","Dobrar flocos de seis pontas e comparar os padrões.","Criar flocos detalhados ou decorar uma janela."]],
+["Noite de histórias de Natal",["Apontar para as imagens e fazer sons.","Ler algumas linhas em voz alta.","Ler um capítulo a um irmão mais novo.","Ler de forma dramática ou inventar uma história de Natal."]],
+["Construir uma aldeia de Natal",["Empilhar blocos grandes para fazer casas.","Fazer casas de cartão.","Juntar candeeiros de copos de papel e um mapa de ruas.","Desenhar a planta da aldeia e acrescentar cenário de papel."]],
+["Dia da bondade",["Ajudar a arrumar os brinquedos.","Escolher um brinquedo ou livro para doar.","Separar roupa e brinquedos que já não servem para doar.","Organizar uma doação da família ou escrever um bilhete simpático."],"coupons"],
+["Percurso de obstáculos das renas",["Passar por cima de almofadas com ajuda.","Seguir um percurso simples de obstáculos.","Montar três estações e cronometrar cada volta.","Desenhar e cronometrar um percurso seguro dentro de casa."]],
+["Fazer enfeites para a árvore",["Marcar a mão em massa macia.","Moldar e pintar enfeites.","Fazer enfeites de massa de sal e pintar os pormenores.","Criar enfeites personalizados para guardar."]],
+["Caça ao tesouro de Natal",["Encontrar objetos grandes com pistas em desenho.","Resolver pistas escritas simples.","Resolver pistas em rima e ajudar os mais pequenos.","Escrever as pistas e esconder os tesouros."],"clues"],
+["Cinema com chocolate quente",["Escolher o brinquedo preferido para ver o filme.","Fazer bilhetes de cinema.","Gerir a bilheteira: bilhetes, lugares e menu de lanches.","Escolher um filme para a família e preparar os lanches."],"tickets"],
+["Desafio musical de Natal",["Abanar um instrumento seguro para bebés.","Adivinhar uma canção cantarolada.","Tocar uma canção de Natal num instrumento ou numa app.","Organizar um quiz de músicas de Natal."]],
+["Construir uma casa de gengibre",["Pôr decorações grandes com ajuda.","Decorar as paredes e o telhado.","Colar as paredes e o telhado com glacé.","Montar a casa e criar os pormenores."]],
+["Laboratório de ciência de Natal",["Ver o gelo derreter numa taça.","Prever que cubo de gelo derrete primeiro.","Testar sal, açúcar e água simples em cubos de gelo.","Montar uma experiência justa e explicar os resultados."]],
+["Cabine de fotos em família",["Escolher um gorro de Natal macio.","Fazer poses engraçadas e adereços de papel.","Fazer adereços de papel e uma moldura com letreiro.","Montar a câmara e criar uma colagem de fotos."]],
+["Embrulhar uma surpresa",["Decorar papel com lápis de cera laváveis.","Embrulhar uma pequena prenda com ajuda.","Embrulhar uma prenda com cuidado e fazer uma etiqueta a condizer.","Criar embrulhos reutilizáveis ou etiquetas."]],
+["Aventura do postal de Natal",["Procurar árvores de Natal por onde passarem.","Desenhar uma cena de Natal do dia.","Escrever um postal aos avós e pô-lo no correio.","Tirar uma foto e escrever uma legenda tipo diário de viagem."],"postcard"],
+["Frasco de desejos da família",["Dizer ou desenhar um desejo feliz.","Escrever um desejo para outra pessoa.","Escrever desejos para três pessoas diferentes.","Escrever um desejo especial para o novo ano."],"wish"],
+["Mímica de Natal",["Imitar uma rena ou um pinguim.","Fazer mímica de palavras de Natal.","Fazer mímica de títulos de filmes e canções.","Inventar pistas mais difíceis e apresentar o jogo."],"charades"],
+["Recordar os bons momentos",["Escolher uma foto de família preferida.","Desenhar uma memória feliz deste ano.","Fazer o top dez do ano.","Criar uma pequena colagem do ano."],"memories"],
+["Magia da Consoada",["Deitar um peluche e dar as boas-noites.","Deixar um desenho ou um bilhete ao Pai Natal.","Pôr o sapatinho junto à lareira ou à árvore e escrever ao Pai Natal.","Ajudar a pôr a mesa da Consoada e começar uma tradição de família."],"santa"]];
+const dateL=d=>WDL[wd(d)]+", "+d+" de dezembro";const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+return {S,N,WD,WDL,dateL,head:d=>cap(dateL(d))}})();
+// ---------- bilingual printable sheets, built as blocks packed onto A4 ----------
+const x=(en,pt)=>st.lang==="pt"?pt:en;
+const ln=n=>'<div class="ln"></div>'.repeat(n);
+const B=(h,label,inner)=>({h,label,inner});
+const blkHTML=(b,h)=>'<div class="blk" style="height:'+h+'mm">'+(b.label?'<div class="bl">'+b.label+'</div>':'')+b.inner+'</div>';
+const H=(t,s)=>'<h2>'+t+'</h2>'+(s?'<p class="sub">'+s+'</p>':'');
+const ELF=(w)=>'<svg viewBox="0 0 140 190" style="width:'+w+'mm;height:'+(w*190/140)+'mm;flex:none"><use href="#elf"/></svg>';
+const KIDS=f=>(st.kids||[]).filter(f||(()=>true));
+const KN=f=>{const k=KIDS(f).map(q=>esc(q.name));return !k.length?"":k.length===1?k[0]:k.slice(0,-1).join(", ")+x(" and "," e ")+k[k.length-1]};
+const hiLine=()=>KN()?x("Hi "+KN()+"!","Olá, "+KN()+"!"):"";
+const SIGN=()=>x("Love, your Christmas Elf","Com carinho, o vosso Duende de Natal");
+const flake=(s,thin)=>{let a="";for(let i=0;i<6;i++)a+='<g transform="rotate('+i*60+' 50 50)"><path d="M50 50V9M50 24l-9-8M50 24l9-8M50 37l-11-8M50 37l11-8"/><circle cx="50" cy="8" r="3.5"/></g>';
+ return '<svg viewBox="0 0 100 100" style="width:'+s+'mm;height:'+s+'mm"><g fill="none" stroke-linecap="round" stroke-linejoin="round"><g stroke="#222" stroke-width="'+(thin?3:8)+'">'+a+'<circle cx="50" cy="50" r="7"/></g>'+(thin?'':'<g stroke="#fff" stroke-width="5">'+a+'<circle cx="50" cy="50" r="7"/></g>')+'</g></svg>'};
+const starPath="M12 1.5l3.1 6.6 7.2.9-5.3 5 1.4 7.1L12 17.6 5.6 21.1 7 14 1.7 9l7.2-.9z";
+const ostar=(s,fill)=>'<svg viewBox="0 0 24 24" style="width:'+s+'mm;height:'+s+'mm"><path d="'+starPath+'" fill="'+(fill||'none')+'" stroke="#222" stroke-width=".8" stroke-linejoin="round"/></svg>';
+const grid=(cols,inner)=>'<div style="display:grid;grid-template-columns:repeat('+cols+',1fr);gap:4mm">'+inner+'</div>';
+const card=(h,inner,extra)=>'<div class="cut" style="height:'+h+'mm;'+(extra||'')+'">'+inner+'</div>';
+const box=(h,label)=>'<div class="box" style="height:'+h+'mm;padding:2mm 3mm;font-size:10pt;color:#777">'+(label||'')+'</div>';
+
+function noteCard(d){const s=L.S[scene(d)-1];
+ return B(40,x("Elf note · ","Bilhete do duende · ")+t.dayShort(d),card(34,ELF(16)+'<div>'+(hiLine()?'<div style="font-weight:800;color:#c4232f;font-size:10.5pt">'+hiLine()+'</div>':'')+'<div class="note">“'+esc(s[3])+'”</div><div class="sig">'+SIGN()+'</div></div>','display:flex;gap:5mm;align-items:center'))}
+
+const LETTERS={
+ arrival:()=>[x("Arrival letter","Carta de chegada"),KN()?x("Dear "+KN()+",","Olá, "+KN()+"!"):x("Dear Christmas explorers,","Queridos exploradores de Natal,"),x("I travelled all the way from the North Pole to share some festive fun with you. Every morning I may be somewhere new, with a joke, a puzzle or a tiny mission. You can give me a name! We will practise creativity, kindness and teamwork together.","Viajei desde o Polo Norte para partilhar convosco a alegria do Natal. Todas as manhãs posso estar num sítio novo, com uma piada, um enigma ou uma pequena missão. Podem dar-me um nome! Juntos vamos praticar a criatividade, a bondade e o trabalho de equipa."),SIGN()],
+ mystery:()=>[x("A mystery invitation","Um convite misterioso"),KN()?x("Dear "+KN()+",","Olá, "+KN()+"!"):x("Dear ____________,","Querido(a) ____________,"),x("I have hidden a little clue in the house. Look where stories sleep, and then where socks rest. Ask a grown-up before searching. Good luck, Detective!","Escondi uma pequena pista lá em casa. Procura onde dormem as histórias e depois onde descansam as meias. Pede autorização a um adulto antes de procurar. Boa sorte, detetive!"),x("Your Elf","O teu Duende")],
+ encourage:()=>[x("A gentle encouragement","Um encorajamento"),KN()?x("Dear "+KN()+",","Olá, "+KN()+"!"):x("Dear ____________,","Querido(a) ____________,"),x("Today does not have to be perfect. Try something new, help someone, or make a tiny piece of art. Small acts can make a big difference.","Hoje não tem de ser perfeito. Experimenta algo novo, ajuda alguém ou faz uma pequena obra de arte. Pequenos gestos podem fazer uma grande diferença."),x("Your Elf","O teu Duende")],
+ mission:()=>[x("Secret mission for older kids","Missão secreta para os mais velhos"),x("TOP SECRET: Elf Operations","ULTRASSECRETO: Operações Duende"),x("Agent "+(KN(k=>"cd".includes(k.age))||"____________")+", your mission is to invent a funny, kind and safe surprise for the younger explorers. Avoid scary tricks, messes and spoilers. Report back with a creative mission title.","Agente "+(KN(k=>"cd".includes(k.age))||"____________")+", a tua missão é inventar uma surpresa divertida, simpática e segura para os exploradores mais novos. Nada de partidas assustadoras, confusões ou spoilers. Dá-nos um título criativo para a missão."),x("North Pole HQ","Quartel-General do Polo Norte")],
+ goodbye:()=>[x("Christmas Eve goodbye","Despedida da Consoada"),x("Dear family,","Querida família,"),x("Thank you for the laughter, clever ideas and lovely moments. I am heading home for Christmas, but you can keep making magic by being curious and kind. See you another December!","Obrigado pelas gargalhadas, pelas ideias brilhantes e pelos momentos bonitos. Vou voltar para casa para o Natal, mas vocês podem continuar a fazer magia sendo curiosos e bondosos. Até a um próximo dezembro!"),SIGN()]};
+const letter=(k,h)=>{const l=LETTERS[k]();return B(h,l[0],'<div class="letter" style="height:'+(h-7)+'mm">'+'<div style="flex:1"><p style="margin:0 0 2mm;font-weight:800">'+l[1]+'</p><p style="margin:0;font-size:12.5pt">'+l[2]+'</p><div class="sig">'+l[3]+'</div></div>'+ELF(24)+'</div>')};
+
+// Every sheet: title, short description, blocks(d), optional answers for parents
+const R={
+arrival:{t:["Elf’s arrival letter","Carta de chegada do duende"],b:d=>[letter("arrival",72),B(70,x("Name the elf","Um nome para o duende"),grid(3,[1,2,3].map(i=>card(48,'<div style="font-weight:800;color:#c4232f">'+x("Idea","Ideia")+' '+i+'</div>'+ln(2)+'<div style="margin-top:4mm;font-size:10pt">'+x("Votes","Votos")+': ☐ ☐ ☐ ☐ ☐</div>')).join(''))+'<p style="font-size:10pt;margin:2mm 0 0">'+x("Ages 9+: on the back, write the elf’s life story and secret talent.","9+ anos: nas costas, escrevam a história do duende e o seu talento secreto.")+'</p>')]},
+goodbye:{t:["Elf’s goodbye letter","Carta de despedida do duende"],b:d=>[letter("goodbye",72),B(95,x("My favourite elf moments","Os meus melhores momentos com o duende"),'<div style="display:grid;grid-template-columns:1fr 1fr;gap:5mm">'+box(78,x("Draw your favourite elf memory","Desenha a tua recordação preferida"))+'<div>'+[1,2,3,4,5].map(i=>'<div class="ln">'+i+'.</div>').join('')+'</div></div>')]},
+snow:{t:["Snowflakes to colour and cut","Flocos de neve para colorir e recortar"],b:d=>[B(262,x("Snowflake to colour","Floco de neve para colorir"),'<div style="text-align:center">'+flake(172)+'<p style="font-size:11pt;margin:3mm 0 0">'+x("Colour this snowflake. Ages 9+: how many lines of symmetry does it have?","Pinta este floco. 9+ anos: quantos eixos de simetria tem?")+'</p></div>'),B(150,x("Fold and cut a snowflake","Dobrar e recortar um floco"),'<div style="display:grid;grid-template-columns:1.2fr 1fr;gap:6mm;align-items:start"><ol style="padding-left:6mm;margin:0;font-size:12pt"><li style="margin-bottom:2mm">'+x("Cut out a square of paper.","Recorta um quadrado de papel.")+'</li><li style="margin-bottom:2mm">'+x("Fold it in half into a triangle, then in half again.","Dobra ao meio em triângulo e outra vez ao meio.")+'</li><li style="margin-bottom:2mm">'+x("Fold into thirds like a fan, so you get a thin wedge like the one on the right.","Dobra em três, como um leque, até ficar uma cunha fina como a da direita.")+'</li><li style="margin-bottom:2mm">'+x("Cut along the red dotted lines, then unfold.","Recorta pelas linhas vermelhas e abre.")+'</li></ol><svg viewBox="0 0 100 160" style="width:80mm;height:128mm"><path d="M50 156L20 6h60z" fill="none" stroke="#222" stroke-width="1.2"/><path d="M50 156V6" stroke="#999" stroke-dasharray="3 3"/><path d="M20 6l15 18 15-14 15 14 15-18M24 36l16 8-14 10M76 66l-16 8 14 10M28 98l14 6-11 9M72 32l-13 6 11 9" fill="none" stroke="#c4232f" stroke-width="1.4" stroke-dasharray="3 2"/></svg></div><p style="font-size:10pt;color:#666;margin:2mm 0 0">'+x("Little ones: an adult cuts, the child unfolds and decorates.","Pequeninos: o adulto recorta, a criança abre e decora.")+'</p>')]},
+tea:{t:["Tea party menu and place cards","Menu e cartões de lugar do chá"],b:d=>[B(112,x("Toy tea party","Chá dos peluches"),'<div style="display:grid;grid-template-columns:1fr 1.3fr;gap:5mm"><div class="box" style="height:100mm;padding:4mm;text-align:center"><div class="note" style="color:#c4232f">'+x("North Pole Café","Café do Polo Norte")+'</div><p style="margin:2mm 0 0;font-weight:800">'+x("Drinks","Bebidas")+'</p>'+ln(2)+'<p style="margin:3mm 0 0;font-weight:800">'+x("Snacks","Lanches")+'</p>'+ln(2)+'<p style="margin:3mm 0 0;font-size:10pt">'+x("Guests today","Convidados hoje")+': ____</p></div>'+grid(2,[1,2,3,4].map(()=>card(46,'<div style="border-bottom:1px dashed #999;height:21mm;font-size:8pt;color:#999">'+x("fold","dobrar")+'</div><div style="font-size:9pt;color:#777;margin-top:2mm">'+x("Guest","Convidado")+'</div><div class="ln" style="height:8mm"></div>')).join(''))+'</div>')]},
+score:{t:["Snowball scoreboard","Quadro de pontos"],b:d=>[B(100,x("Snowball scoreboard","Quadro de pontos das bolas de neve"),'<table><tr><th>'+x("Player","Jogador")+'</th>'+[1,2,3,4,5].map(i=>'<th>'+x("Round","Ronda")+' '+i+'</th>').join('')+'<th>Total</th></tr>'+[1,2,3,4].map(()=>'<tr>'+'<td style="height:11mm"></td>'.repeat(7)+'</tr>').join('')+'</table><p style="font-size:10pt;margin:3mm 0 0">'+x("Lines: close = 1 point, middle = 2, far = 3. Ages 13+: work out each player’s hit percentage.","Linhas: perto = 1 ponto, meio = 2, longe = 3. 13+ anos: calculem a percentagem de acertos de cada jogador.")+'</p>')]},
+story:{t:["Story sheet","Folha da história"],b:d=>[B(176,x("Story time","Hora da história"),'<b>'+x("Five winter words I found","Cinco palavras de inverno que encontrei")+'</b>'+grid(5,'<div class="box" style="height:14mm"></div>'.repeat(5))+'<div style="display:grid;grid-template-columns:1fr 1fr;gap:5mm;margin-top:4mm"><div><b>'+x("My favourite picture","A minha imagem preferida")+'</b>'+box(58)+'</div><div><b>'+x("A different ending","Um final diferente")+'</b>'+ln(6)+'</div></div><b style="display:block;margin-top:3mm">'+x("The story in exactly 50 words (one word per box)","A história em exatamente 50 palavras (uma por quadrado)")+'</b><div style="display:grid;grid-template-columns:repeat(10,1fr);border-left:1px solid #bbb;border-top:1px solid #bbb">'+'<div style="height:9mm;border-right:1px solid #bbb;border-bottom:1px solid #bbb"></div>'.repeat(50)+'</div>')]},
+kindcards:{t:["Kindness cards","Cartões de bondade"],b:d=>[B(120,x("Kindness post office","Correio da bondade"),grid(3,[x("Thank you for…","Obrigado por…"),x("You are great at…","És muito bom/boa a…"),x("I love it when you…","Adoro quando tu…"),x("Thank you for…","Obrigado por…"),x("You make me smile because…","Fazes-me sorrir porque…"),"♥"].map(s=>card(52,'<div style="color:#c4232f;font-size:16pt">♥</div><div class="note" style="font-size:13pt">'+s+'</div>'+ln(2)+'<div style="font-size:9pt">'+x("To","Para")+': ________ '+x("From","De")+': ________</div>')).join(''))) ]},
+comic:{t:["Banana faces and comic","Caras de banana e banda desenhada"],b:d=>{const f=(m,e)=>'<svg viewBox="0 0 60 60" style="width:30mm;height:30mm"><circle cx="30" cy="30" r="26" fill="none" stroke="#222" stroke-width="1.5"/>'+e+'<path d="'+m+'" fill="none" stroke="#222" stroke-width="2" stroke-linecap="round"/></svg>';
+ const eyes='<circle cx="21" cy="24" r="2.5"/><circle cx="39" cy="24" r="2.5"/>';
+ return [B(150,x("Banana faces","Bananas com cara"),grid(4,[[f("M18 36q12 12 24 0",eyes),x("Happy","Feliz")],[f("M18 44q12-10 24 0",eyes),x("Sad","Triste")],[f("M26 40a4 5 0 1 0 8 0a4 5 0 1 0-8 0",'<circle cx="21" cy="23" r="4" fill="none" stroke="#222" stroke-width="1.5"/><circle cx="39" cy="23" r="4" fill="none" stroke="#222" stroke-width="1.5"/>'),x("Surprised","Surpreendido")],[f("M22 40h16",'<path d="M16 25h9M35 25h9" stroke="#222" stroke-width="2"/>'),x("Sleepy","Com sono")]].map(a=>'<div style="text-align:center">'+a[0]+'<div style="font-size:10pt">'+a[1]+'</div></div>').join(''))+'<b style="display:block;margin-top:3mm">'+x("My banana comic","A minha banda desenhada de bananas")+'</b>'+grid(2,'<div class="box" style="height:40mm"></div>'.repeat(4)))]}},
+lab:{t:["Experiment sheet","Folha de experiência"],b:d=>[B(160,x("Experiment sheet","Folha de experiência"),'<p style="margin:0"><b>'+x("Our question","A nossa pergunta")+':</b></p>'+ln(1)+'<p style="margin:2mm 0 0"><b>'+x("I predict…","Eu acho que…")+'</b></p>'+ln(1)+'<table style="margin-top:3mm"><tr><th>'+x("Try","Tentativa")+'</th><th>'+x("Method A","Método A")+': ________</th><th>'+x("Method B","Método B")+': ________</th></tr>'+[1,2,3].map(i=>'<tr><td style="height:10mm">'+i+'</td><td></td><td></td></tr>').join('')+'</table><p style="margin:3mm 0 0"><b>'+x("What happened?","O que aconteceu?")+'</b></p>'+ln(2)+'<p style="margin:2mm 0 0"><b>'+x("Why do we think it happened? (ages 13+: what did we keep the same?)","Porque é que achamos que aconteceu? (13+ anos: o que mantivemos igual?)")+'</b></p>'+ln(2))]},
+art:{t:["Finish the picture","Acaba o desenho"],b:d=>[B(150,x("Elf art studio","Atelier do duende"),'<div style="display:grid;grid-template-columns:1fr 1fr;gap:6mm"><div style="text-align:center"><svg viewBox="0 0 100 120" style="width:78mm;height:94mm"><g fill="none" stroke="#222" stroke-width="1.6" stroke-linejoin="round"><path d="M50 8l3 7 7 1-5 5 1 7-6-4-6 4 1-7-5-5 7-1z"/><path d="M50 26L28 56h10L20 84h12L10 108h40"/><rect x="44" y="108" width="6" height="10"/></g><path d="M50 26L72 56h-10L80 84h-12L90 108H50M50 108h6v10" fill="none" stroke="#bbb" stroke-width="1.2" stroke-dasharray="2 3"/></svg><div style="font-size:10pt">'+x("The elf only drew half. Finish the tree!","O duende só desenhou metade. Acaba a árvore!")+'</div></div><div class="box" style="height:130mm;padding:4mm;text-align:center"><div class="note" style="color:#c4232f">'+x("North Pole Art Show","Exposição de Arte do Polo Norte")+'</div><p style="font-size:10pt;margin:1mm 0">'+x("Make a poster. Ages 13+: max. 3 colours and a 4-word slogan.","Faz um cartaz. 13+ anos: no máximo 3 cores e um slogan de 4 palavras.")+'</p></div></div>')]},
+teddy:{t:["Teddy hospital chart","Ficha do hospital dos peluches"],b:d=>[B(120,x("Teddy hospital","Hospital dos peluches"),'<div style="display:grid;grid-template-columns:1.4fr 1fr;gap:5mm"><div class="box" style="height:106mm;padding:4mm"><div class="note" style="color:#c4232f">'+x("Patient chart","Ficha clínica")+'</div>'+[x("Patient’s name","Nome do paciente"),x("Animal","Animal"),x("What happened?","O que aconteceu?")].map(l=>'<div style="font-size:10pt;margin-top:2mm">'+l+'</div><div class="ln" style="height:7mm"></div>').join('')+'<div style="font-size:10pt;margin-top:3mm">'+x("Treatment","Tratamento")+': ☐ '+x("plaster","penso")+' ☐ '+x("cuddle","miminho")+' ☐ '+x("rest","descanso")+' ☐ '+x("hot chocolate","chocolate quente")+'</div><div style="font-size:10pt;margin-top:3mm">'+x("Doctor","Médico")+': Dr. '+(KN()||'____________')+' & Dr. '+x('Elf','Duende')+'</div></div>'+card(106,'<div style="text-align:center;font-size:30pt;color:#c4232f">♥</div><div class="note" style="text-align:center">'+x("Get well soon!","As melhoras!")+'</div>'+ln(5))+'</div>')]},
+course:{t:["Obstacle course planner","Plano do percurso"],b:d=>[B(130,x("Obstacle course","Percurso de obstáculos"),'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4mm">'+[1,2,3,4,5].map(i=>'<div style="width:28mm;height:28mm;border:2px solid #0f4a35;border-radius:50%;display:grid;place-items:center;font:800 18pt Grandstander,sans-serif;color:#c4232f">'+i+'</div>').join('<div style="flex:1;border-top:2px dashed #999;margin:0 1mm"></div>')+'</div><p style="font-size:10pt;margin:0 0 2mm">'+x("Draw or write each station in its circle. Safety rule:","Desenha ou escreve cada estação no seu círculo. Regra de segurança:")+' ______________________</p><table><tr><th>'+x("Name","Nome")+'</th><th>'+x("Try","Volta")+' 1</th><th>'+x("Try","Volta")+' 2</th><th>'+x("Try","Volta")+' 3</th><th>'+x("Best time","Melhor tempo")+'</th></tr>'+'<tr><td style="height:10mm"></td><td></td><td></td><td></td><td></td></tr>'.repeat(4)+'</table>')]},
+ornaments:{t:["Ornament templates","Moldes de enfeites"],b:d=>{const o=(p)=>'<svg viewBox="0 0 60 70" style="width:56mm;height:65mm"><g fill="none" stroke="#222" stroke-width="1.3" stroke-linejoin="round">'+p+'</g></svg>';
+ return [B(262,x("Ornaments to colour and cut","Enfeites para pintar e recortar"),grid(3,[o('<path d="M30 6l7 15 16 2-12 11 3 16-14-8-14 8 3-16-12-11 16-2z"/><circle cx="30" cy="12" r="1.6"/>'),o('<rect x="25" y="4" width="10" height="7"/><circle cx="30" cy="38" r="25"/><path d="M8 32q22 8 44 0M7 44q23 8 46 0"/>'),o('<path d="M30 4L14 28h8L8 50h12L4 66h52L40 50h12L38 28h8z"/><circle cx="30" cy="9" r="1.6"/>'),o('<path d="M30 6c-3 0-4 3-4 5-10 3-14 14-14 26 0 10-4 16-8 20h52c-4-4-8-10-8-20 0-12-4-23-14-26 0-2-1-5-4-5z"/><circle cx="30" cy="64" r="4"/>'),o('<path d="M16 64V30h28v34zM16 30l14-20 14 20"/><rect x="26" y="48" width="8" height="16"/><circle cx="30" cy="24" r="1.6"/>'),o('<circle cx="30" cy="36" r="24"/><circle cx="30" cy="36" r="14"/><path d="M30 12V6"/>'),o('<path d="M30 8c6 10 22 12 22 26 0 14-12 26-22 30-10-4-22-16-22-30C8 20 24 18 30 8z"/>'),o('<path d="M12 14h36v40H12zM12 30h36M30 14v40M30 14c-6-10-14-6-10 0M30 14c6-10 14-6 10 0"/>'),o('<circle cx="30" cy="40" r="14"/><circle cx="30" cy="18" r="9"/><circle cx="27" cy="16" r="1.2"/><circle cx="33" cy="16" r="1.2"/><path d="M26 22q4 3 8 0M30 30v20"/>')].join(''))+'<div class="box" style="padding:3mm 4mm;margin-top:4mm;font-size:10.5pt"><b>'+x("Salt dough (for day 12)","Massa de sal (para o dia 12)")+':</b> '+x("250 g plain flour, 125 g salt, about 150 ml water. Knead, roll 5 mm thick, press shapes, make a hole with a straw. Dry for 2–3 days, or bake at 100 °C for about 2–3 hours (adult). Paint when cool.","250 g de farinha, 125 g de sal, cerca de 150 ml de água. Amassar, estender com 5 mm, cortar as formas e fazer um furo com uma palhinha. Secar 2–3 dias, ou levar ao forno a 100 °C durante cerca de 2–3 horas (adulto). Pintar depois de frio.")+'</div>')]}},
+mirror:{t:["Mirror message","Mensagem ao espelho"],b:d=>[B(150,x("The mirror knows a secret","O espelho guarda um segredo"),'<p style="margin:0 0 3mm;font-size:10.5pt">'+x("Hold this page up to a mirror.","Segura esta folha em frente a um espelho.")+'</p><div style="display:grid;grid-template-columns:1fr 2fr;gap:4mm"><div class="box" style="height:40mm;text-align:center;padding:3mm"><b>'+x("Ages 3–5","3–5 anos")+'</b><div style="font-size:9.5pt">'+x("Find the star sticker by the mirror!","Procura o autocolante de estrela junto ao espelho!")+'</div><div style="font-size:28pt">★</div></div><div class="box" style="height:40mm;text-align:center;padding:3mm"><b>'+x("Ages 6–8: one word","6–8 anos: uma palavra")+'</b><br><span class="mir note" style="font-size:36pt">'+x("MERRY","FELIZ")+'</span></div></div><div class="box" style="margin-top:4mm;padding:4mm;text-align:center"><b>'+x("Ages 9–12: a sentence","9–12 anos: uma frase")+'</b><br><span class="mir note" style="font-size:20pt">'+x("You are kind, clever and brave. Merry Christmas!","És bondoso, inteligente e corajoso. Feliz Natal!")+'</span></div><div class="box" style="margin-top:4mm;padding:3mm 4mm"><b>'+x("Ages 13+: write one backwards for someone else","13+ anos: escreve uma ao contrário para outra pessoa")+'</b>'+ln(2)+'</div>')]},
+colours:{t:["Colour hunt cards","Cartões da caça às cores"],b:d=>[B(150,x("Christmas colour hunt","Caça às cores de Natal"),grid(4,[["#c4232f",x("RED","VERMELHO")],["#2c7a52",x("GREEN","VERDE")],["#e2b13c",x("GOLD","DOURADO")],["#ffffff",x("WHITE","BRANCO")]].map(c=>'<div style="height:44mm;border:2px solid #222;border-radius:4mm;background:'+c[0]+';display:grid;place-items:end center;padding:2mm"><span style="background:#fff;border-radius:2mm;padding:0 2mm;font-weight:800;font-size:10pt">'+c[1]+'</span></div>').join(''))+'<p style="font-size:10pt;margin:3mm 0 2mm">'+x("Cut out the cards for the elf to hold. Then draw or write what you found for each colour:","Recorta os cartões para o duende segurar. Depois desenha ou escreve o que encontraste de cada cor:")+'</p>'+grid(4,'<div class="box" style="height:30mm"></div>'.repeat(4))+grid(4,'<div class="box" style="height:30mm;margin-top:3mm"></div>'.repeat(4)))]},
+script:{t:["Mini play script","Guião da peça"],b:d=>[B(170,x("North Pole Theatre","Teatro do Polo Norte"),'<p style="margin:0"><b>'+x("Title","Título")+':</b> __________________________ &nbsp; <b>'+x("Director","Realizador")+':</b> ______________</p><p style="margin:2mm 0 0"><b>'+x("Characters (toys)","Personagens (brinquedos)")+':</b></p>'+ln(1)+[1,2,3].map(i=>'<div class="box" style="margin-top:3mm;padding:2mm 4mm"><b style="color:#c4232f">'+x("Scene","Cena")+' '+i+'</b> '+(i===3?x("(the twist!)","(a reviravolta!)"):'')+ln(3)+'</div>').join(''))]},
+hat:{t:["Elf hat and riddles","Gorro do duende e adivinhas"],b:d=>[B(262,x("The elf’s lost hat: colour and cut out","O gorro perdido do duende: pinta e recorta"),'<div style="text-align:center"><svg viewBox="0 0 100 100" style="width:178mm;height:178mm"><g fill="none" stroke="#222" stroke-width=".8" stroke-linejoin="round"><path d="M14 78Q24 30 62 14Q86 6 92 22Q76 18 70 34Q62 54 86 78Z"/><path d="M30 50q14-6 30 2M38 34q12-4 24 0" stroke-dasharray="2 2"/><rect x="8" y="76" width="84" height="14" rx="7"/><circle cx="92" cy="24" r="7"/></g></svg><p style="font-size:11pt;margin:2mm 0 0">'+x("Colour the hat, cut it out and hide it near the elf.","Pinta o gorro, recorta-o e esconde-o perto do duende.")+'</p></div>'),B(64,x("Hat riddles","Adivinhas do gorro"),grid(2,card(54,'<b style="color:#c4232f">'+x("Riddle 1","Adivinha 1")+'</b><div style="font-size:12pt">'+x("I keep you warm at night, I’m soft and I have a pillow friend. Where is the hat?","Aqueço-te à noite, sou macia e tenho uma almofada amiga. Onde está o gorro?")+'</div>')+card(54,'<b style="color:#c4232f">'+x("Riddle 2: write your own","Adivinha 2: escreve a tua")+'</b>'+ln(3))))],ans:()=>x("Riddle 1: in the bed.","Adivinha 1: na cama.")},
+dance:{t:["Dance sign and move cards","Cartaz e passos de dança"],b:d=>[B(78,x("Dance sign","Cartaz da dança"),'<div style="height:66mm;border:3px solid #c4232f;border-radius:5mm;display:grid;place-items:center;font:800 64pt/1 Grandstander,sans-serif;color:#0f4a35">'+x("DANCE!","DANÇA!")+'</div>'),B(84,x("Dance moves","Passos de dança"),grid(3,[x("Reindeer hop","Salto de rena"),x("Snowflake spin","Rodopio de floco"),x("Penguin waddle","Andar de pinguim"),x("Santa’s belly wobble","Barriga do Pai Natal"),x("Elf tiptoes","Pontas dos pés do duende"),x("Freeze like a snowman!","Estátua de boneco de neve!")].map(m=>card(34,'<div class="note" style="font-size:14pt;text-align:center;padding-top:6mm">'+m+'</div>')).join('')))]},
+recipe:{t:["Secret recipe card","Receita secreta"],b:d=>[B(130,x("The bakery’s secret recipe","A receita secreta da pastelaria"),'<div style="display:grid;grid-template-columns:1fr 1.4fr;gap:5mm"><div class="box" style="height:116mm;padding:4mm"><div class="note" style="color:#c4232f">'+x("Snowflake soup","Sopa de flocos de neve")+'</div><p style="font-size:10pt;margin:1mm 0">'+x("Pretend recipe for ages 3–5","Receita a fingir para os 3–5 anos")+'</p><ul style="padding-left:5mm;font-size:11pt"><li>'+x("3 spoons of snow (cotton wool)","3 colheres de neve (algodão)")+'</li><li>'+x("1 cup of starlight","1 chávena de luz das estrelas")+'</li><li>'+x("A pinch of giggles","Uma pitada de gargalhadas")+'</li><li>'+x("Stir 10 times and say “brrr!”","Mexer 10 vezes e dizer “brrr!”")+'</li></ul></div><div><b>'+x("Scale the biscuit recipe","Ajusta a receita de bolachas")+'</b><table style="margin-top:2mm"><tr><th>'+x("Ingredient","Ingrediente")+'</th><th>'+x("Recipe","Receita")+'</th><th>× 2</th><th>× 1,5</th></tr>'+[[x("Flour","Farinha"),"200 g"],[x("Butter","Manteiga"),"100 g"],[x("Sugar","Açúcar"),"80 g"],[x("Eggs","Ovos"),"1"]].map(r=>'<tr><td>'+r[0]+'</td><td>'+r[1]+'</td><td style="width:20mm"></td><td style="width:20mm"></td></tr>').join('')+'</table><p style="font-size:10pt;margin:3mm 0 0">'+x("Ages 6–8: measure 100 g of oats or rice with a grown-up. Ages 13+: how many cups is 300 g of flour if 1 cup ≈ 120 g?","6–8 anos: mede 100 g de aveia ou arroz com um adulto. 13+ anos: quantas chávenas são 300 g de farinha, se 1 chávena ≈ 120 g?")+'</p></div></div>')],ans:()=>x("×2: 400 g, 200 g, 160 g, 2 eggs. ×1.5: 300 g, 150 g, 120 g, 1.5 eggs. 300 g of flour ≈ 2.5 cups.","×2: 400 g, 200 g, 160 g, 2 ovos. ×1,5: 300 g, 150 g, 120 g, 1,5 ovos. 300 g de farinha ≈ 2,5 chávenas.")},
+tickets:{t:["Cinema tickets and film quiz","Bilhetes de cinema e quiz"],b:d=>[B(128,x("Cinema tickets","Bilhetes de cinema"),grid(2,('<div style="display:grid;grid-template-columns:1fr 24mm;border:2px solid #c4232f;border-radius:4mm;height:34mm;overflow:hidden"><div style="padding:3mm 4mm"><div class="note" style="color:#c4232f;font-size:14pt">'+x("North Pole Cinema","Cinema do Polo Norte")+'</div><div style="font-size:10pt">'+x("Film","Filme")+': ______________<br>'+x("Time","Hora")+': ______</div></div><div style="border-left:2px dashed #c4232f;padding:3mm;font-size:9pt;background:#fbeaea">'+x("ADMIT ONE","ENTRADA")+'<br>'+x("Seat","Lugar")+': __<br>'+x("Snack","Lanche")+': __</div></div>').repeat(6))),B(56,x("Film quiz","Quiz do filme"),[1,2,3].map(i=>'<div style="display:flex;gap:3mm;align-items:end"><b>'+i+'.</b><div class="ln" style="flex:1"></div></div><div style="font-size:9.5pt;color:#777;padding-left:5mm">'+x("Answer","Resposta")+': ________________</div>').join(''))]},
+code:{t:["North Pole code sheet","Código do Polo Norte"],b:d=>{const ab="ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+ return [B(200,x("North Pole code","Código do Polo Norte"),'<table style="margin-bottom:3mm"><tr>'+ab.slice(0,13).map(a=>'<th style="text-align:center">'+a+'</th>').join('')+'</tr><tr>'+ab.slice(0,13).map((a,i)=>'<td style="text-align:center">'+(i+1)+'</td>').join('')+'</tr><tr>'+ab.slice(13).map(a=>'<th style="text-align:center">'+a+'</th>').join('')+'</tr><tr>'+ab.slice(13).map((a,i)=>'<td style="text-align:center">'+(i+14)+'</td>').join('')+'</tr></table><div class="pz"><b>'+x("Ages 3–5: colour code","3–5 anos: código de cores")+'</b> — ★ = '+x("red","vermelho")+', ● = '+x("green","verde")+', ■ = '+x("gold","dourado")+'. '+x("Colour the shapes:","Pinta as formas:")+' <span style="font-size:20pt">☆ ○ □ ☆ ○</span></div><div class="pz"><b>'+x("Message 1 (ages 6–8)","Mensagem 1 (6–8 anos)")+'</b><br><span style="font-size:16pt;letter-spacing:1mm">'+x("19 – 14 – 15 – 23 – 13 – 1 – 14","16 – 18 – 5 – 14 – 4 – 1")+'</span>'+ln(1)+'</div><div class="pz"><b>'+x("Message 2 (ages 9–12)","Mensagem 2 (9–12 anos)")+'</b>: '+x("every letter moved 3 forward. Move each back 3.","cada letra avançou 3 lugares. Recua cada uma 3 lugares.")+'<br><span style="font-size:16pt;letter-spacing:1mm">'+x("PHUUB FKULVWPDV","ERDV IHVWDV")+'</span>'+ln(1)+'</div><div class="pz"><b>'+x("Invent your own cipher (ages 13+)","Inventa a tua cifra (13+ anos)")+'</b><table style="margin-top:1mm"><tr>'+ab.map(a=>'<td style="text-align:center;padding:.6mm">'+a+'</td>').join('')+'</tr><tr>'+ab.map(()=>'<td style="height:7mm"></td>').join('')+'</tr></table></div>')]},ans:()=>x("Message 1: SNOWMAN. Message 2: MERRY CHRISTMAS.","Mensagem 1: PRENDA. Mensagem 2: BOAS FESTAS.")},
+mallow:{t:["Marshmallow maths","Matemática dos marshmallows"],b:d=>{const m=n=>'<span style="letter-spacing:.5mm;font-size:15pt">'+'○'.repeat(n)+'</span>';
+ return [B(150,x("Marshmallow maths","Matemática dos marshmallows"),'<div style="display:grid;grid-template-columns:1fr 1fr;gap:4mm"><div class="pz"><b>'+x("Ages 3–5","3–5 anos")+'</b><br>'+x("Count and colour:","Conta e pinta:")+' '+m(5)+'<br>'+x("How many?","Quantos?")+' ____</div><div class="pz"><b>'+x("Ages 6–8","6–8 anos")+'</b><br>'+m(3)+' + '+m(4)+' = ___<br>'+m(6)+' + '+m(2)+' = ___<br>'+m(5)+' + '+m(5)+' = ___</div><div class="pz"><b>'+x("Ages 9–12","9–12 anos")+'</b><br>'+x("4 mugs with 3 marshmallows each. How many in total?","4 canecas com 3 marshmallows cada. Quantos no total?")+' ___<br>'+x("18 marshmallows shared between 3 mugs. How many each?","18 marshmallows por 3 canecas. Quantos em cada?")+' ___</div><div class="pz"><b>'+x("Ages 13+","13+ anos")+'</b><br>'+x("Toppings: marshmallow, cream, sprinkles. How many ways to pick exactly 2? And any number, including none?","Coberturas: marshmallow, natas, granulado. Quantas formas de escolher exatamente 2? E qualquer número, incluindo nenhuma?")+'</div></div><b>'+x("Draw your perfect hot chocolate","Desenha o teu chocolate quente perfeito")+'</b>'+box(46))]},ans:()=>x("5 · 7, 8, 10 · 12; 6 each · 3 ways; 8 ways (2×2×2).","5 · 7, 8, 10 · 12; 6 em cada · 3 formas; 8 formas (2×2×2).")},
+postcard:{t:["Christmas postcard","Postal de Natal"],b:d=>[B(122,x("Christmas postcard","Postal de Natal"),'<div class="box" style="height:110mm;display:grid;grid-template-columns:1fr 1fr;overflow:hidden"><div style="padding:5mm;border-right:1.5px solid #0f4a35"><h2>'+x("Greetings from","Saudações de")+'</h2><div class="ln"></div><p style="font-size:10pt;color:#777">'+x("Draw a picture on the back after you cut it out.","Depois de recortar, faz um desenho nas costas.")+'</p>'+ln(4)+'</div><div style="padding:5mm;position:relative"><div style="position:absolute;right:5mm;top:5mm;width:20mm;height:24mm;border:1.5px dashed #c4232f;font-size:8pt;color:#c4232f;display:grid;place-items:center">'+x("stamp","selo")+'</div><div style="height:34mm"></div><p style="font-size:10pt;margin:2mm 0 0">'+x("To:","Para:")+'</p>'+ln(4)+'</div></div>')]},
+detective:{t:["Toy detective case file","Ficha do detetive"],b:d=>[B(140,x("Toy detective: case file","Detetive dos brinquedos: ficha do caso"),grid(3,[x("Teddy","Ursinho"),x("Robot","Robô"),x("Dinosaur","Dinossauro")].map(n=>'<div class="box" style="height:42mm;padding:2mm;text-align:center;font-size:10pt"><b>'+n+'</b><div style="color:#999;margin-top:14mm">'+x("draw the suspect","desenha o suspeito")+'</div></div>').join(''))+'<div class="pz" style="margin-top:4mm"><b>'+x("Clues","Pistas")+'</b><ol style="margin:1mm 0;padding-left:5mm"><li>'+x("The one with the star does not roar.","Quem tem a estrela não ruge.")+'</li><li>'+x("The one with the star does not need batteries.","Quem tem a estrela não precisa de pilhas.")+'</li><li>'+x("The one with the star loves hugs.","Quem tem a estrela adora abraços.")+'</li></ol>'+x("The star is with:","A estrela está com:")+' ________________</div><p style="font-size:10pt;margin:2mm 0 0">'+x("Ages 13+: write a new case with 3 suspects, 3 clues and only one answer.","13+ anos: escreve um caso novo com 3 suspeitos, 3 pistas e uma só resposta.")+'</p>')],ans:()=>x("The teddy has the star.","A estrela está com o ursinho.")},
+stars:{t:["Constellation map","Mapa de constelação"],b:d=>{let g="";for(let i=0;i<=10;i++){g+='<line x1="'+(10+i*8)+'" y1="10" x2="'+(10+i*8)+'" y2="90" stroke="#ccc" stroke-width=".3"/><line x1="10" y1="'+(10+i*8)+'" x2="90" y2="'+(10+i*8)+'" stroke="#ccc" stroke-width=".3"/>'+(i%2===0?'<text x="'+(10+i*8)+'" y="96" font-size="3" text-anchor="middle">'+i+'</text><text x="6" y="'+(91-i*8)+'" font-size="3" text-anchor="end">'+i+'</text>':'')}
+ return [B(165,x("Star constellation","Constelação"),'<div style="display:grid;grid-template-columns:1fr 1.2fr;gap:5mm"><div><b>'+x("Ages 3–5: join the stars","3–5 anos: liga as estrelas")+'</b><div style="display:flex;justify-content:space-around;align-items:center;height:30mm">'+ostar(16)+ostar(16)+ostar(16)+'</div><b>'+x("Ages 6–8: copy the pattern","6–8 anos: copia o padrão")+'</b><svg viewBox="0 0 60 30" style="width:60mm;height:28mm"><g fill="#222"><circle cx="5" cy="20" r="2"/><circle cx="18" cy="8" r="2"/><circle cx="32" cy="14" r="2"/><circle cx="44" cy="5" r="2"/><circle cx="55" cy="22" r="2"/></g><path d="M5 20L18 8 32 14 44 5 55 22" fill="none" stroke="#222" stroke-width=".6"/></svg>'+box(28)+'<b>'+x("Ages 9–12: my constellation’s legend","9–12 anos: a lenda da minha constelação")+'</b>'+ln(3)+'</div><div><b>'+x("Ages 13+: plot and join","13+ anos: marca e liga")+'</b> A(1,2) B(4,6) C(9,6) D(9,1) E(5,1)<svg viewBox="0 0 100 100" style="width:96mm;height:96mm">'+g+'<path d="M10 90H90M10 90V10" stroke="#222" stroke-width=".6"/></svg><div style="font-size:10pt">'+x("Length of each side? Total perimeter?","Comprimento de cada lado? Perímetro total?")+'</div></div></div>')]},ans:()=>x("AB = 5, BC = 5, CD = 5, DE = 4, EA = √17 ≈ 4.1. Perimeter ≈ 23.1.","AB = 5, BC = 5, CD = 5, DE = 4, EA = √17 ≈ 4,1. Perímetro ≈ 23,1.")},
+coupons:{t:["Kindness coupons","Vales de bondade"],b:d=>[B(150,x("Kindness coupons","Vales de bondade"),grid(4,[x("Good for one big hug","Vale um abraço apertado"),x("I’ll tidy up for you","Eu arrumo por ti"),x("I’ll help with dinner","Eu ajudo no jantar"),x("One free story time","Vale uma história"),x("I’ll make your bed","Eu faço a tua cama"),x("A day without arguing (let’s try!)","Um dia sem discussões (vamos tentar!)"),"",""].map(k=>card(64,'<div style="color:#c4232f;font-size:18pt">♥</div><div class="note" style="font-size:12.5pt;min-height:20mm">'+(k||'___________')+'</div><div style="font-size:9pt">'+x("To","Para")+': _______<br>'+x("From","De")+': _______</div>','text-align:center')).join('')))]},
+colour:{t:["Christmas tree to colour","Árvore de Natal para colorir"],b:d=>{let orn="";[[70,70],[92,98],[48,104],[112,128],[34,134],[76,132],[56,160],[100,166],[130,162],[24,166],[80,186]].forEach(p=>orn+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="6"/>');
+ return [B(205,x("Decorate the tree","Enfeitar a árvore"),'<p style="margin:0;font-size:10.5pt">'+x("Colour the tree, then draw more ornaments and presents.","Pinta a árvore e depois desenha mais enfeites e prendas.")+'</p><svg viewBox="0 0 160 230" style="width:100%;height:190mm"><g fill="none" stroke="#222" stroke-width="1.6" stroke-linejoin="round"><path d="M80 14l7 14 15 2-11 10 3 15-14-8-14 8 3-15-11-10 15-2z"/><path d="M80 44L40 96h18L26 140h20L10 186h140l-36-46h20l-32-44h18z"/><rect x="68" y="186" width="24" height="20"/><rect x="18" y="194" width="34" height="26"/><path d="M35 194v26M18 207h34M35 194c-6-8-14-4-8 0M35 194c6-8 14-4 8 0"/><rect x="108" y="198" width="38" height="22"/><path d="M127 198v22M108 209h38"/><path d="M52 92q28 14 56 0M38 136q42 18 84 0M24 182q56 10 112 0" stroke-dasharray="3 3"/>'+orn+'</g></svg>')]}},
+card:{t:["Fold-over Christmas card","Postal de Natal para dobrar"],b:d=>[B(250,x("Christmas card","Postal de Natal"),'<p style="margin:0 0 2mm;font-size:10.5pt">'+x("Colour the letters and decorate the front. Fold along the middle line and write your message in the bottom half.","Pinta as letras e decora a frente. Dobra pela linha do meio e escreve a mensagem na metade de baixo.")+'</p><div class="box" style="height:112mm;display:grid;place-items:center"><svg viewBox="0 0 320 90" style="width:165mm;height:46mm;overflow:visible"><text x="160" y="62" text-anchor="middle" textLength="290" lengthAdjust="spacingAndGlyphs" font-family="Grandstander,sans-serif" font-weight="800" font-size="52" fill="#fff" stroke="#222" stroke-width="2">'+x("Merry Christmas","Feliz Natal")+'</text></svg></div><div style="text-align:center;font-size:9pt;color:#999;border-top:1.5px dashed #999;margin:2mm 0">'+x("fold here","dobrar aqui")+'</div><div class="box" style="height:112mm;padding:6mm"><div class="note">'+x("Dear","Querido(a)")+' __________,</div>'+ln(7)+'<div class="sig">'+x("Love,","Com carinho,")+' __________</div></div>')]},
+biscuits:{t:["Biscuit recipe","Receita de bolachas"],b:d=>[B(160,x("Festive biscuits","Bolachas de Natal"),'<div style="display:grid;grid-template-columns:1fr 1.5fr;gap:5mm"><div class="box" style="padding:4mm;height:146mm"><b style="color:#c4232f">'+x("You need","Ingredientes")+'</b><ul style="padding-left:5mm;font-size:11pt;margin:1mm 0"><li>'+x("250 g plain flour","250 g de farinha")+'</li><li>'+x("125 g soft butter","125 g de manteiga mole")+'</li><li>'+x("100 g sugar","100 g de açúcar")+'</li><li>'+x("1 egg","1 ovo")+'</li><li>'+x("1 tsp vanilla or cinnamon","1 c. chá de baunilha ou canela")+'</li></ul><b style="color:#c4232f">'+x("Jobs by age","Tarefas por idade")+'</b><p style="font-size:10pt;margin:1mm 0">'+x("2–5: press the cutters. 6–8: cut and decorate. 9–12: read and weigh. 13+: mix and bake with an adult.","2–5: carregar nas formas. 6–8: cortar e decorar. 9–12: ler e pesar. 13+: misturar e cozer com um adulto.")+'</p></div><ol style="font-size:11pt;padding-left:6mm;margin:0">'+[x("Beat the butter and sugar until creamy.","Bater a manteiga com o açúcar até ficar cremoso."),x("Add the egg and vanilla, then the flour.","Juntar o ovo e a baunilha, depois a farinha."),x("Make a ball, wrap it and chill for 30 minutes.","Fazer uma bola, embrulhar e levar ao frio 30 minutos."),x("Roll out 5 mm thick and cut shapes.","Estender com 5 mm e cortar as formas."),x("Bake at 180 °C for 10–12 minutes until the edges are golden (adult).","Cozer a 180 °C durante 10–12 minutos, até as bordas dourarem (adulto)."),x("Cool completely, then decorate.","Deixar arrefecer bem e depois decorar.")].map(s=>'<li style="margin-bottom:3mm">'+s+'</li>').join('')+'</ol></div>')]},
+bingo:{t:["Lights walk bingo","Bingo das luzes"],b:d=>{const b=[x("A star","Uma estrela"),x("A snowman","Um boneco de neve"),x("Blue lights","Luzes azuis"),x("A wreath on a door","Uma coroa na porta"),x("A reindeer","Uma rena"),x("Lights in a tree","Luzes numa árvore"),x("A candle in a window","Uma vela na janela"),x("Santa","O Pai Natal"),x("Flashing lights","Luzes a piscar"),x("An angel","Um anjo"),x("A tree in a window","Uma árvore na janela"),x("White lights","Luzes brancas"),x("Something red","Algo vermelho"),x("A present","Uma prenda"),x("Lights on a roof","Luzes no telhado"),x("Your favourite house","A tua casa preferida")];
+ return [B(150,x("Christmas lights bingo","Bingo das luzes de Natal"),'<p style="margin:0 0 2mm;font-size:10.5pt">'+x("Tick each one you spot. Four in a row wins a cheer!","Marquem cada coisa que virem. Quatro em linha ganha uma salva de palmas!")+'</p><table class="bingo">'+[0,1,2,3].map(r=>'<tr>'+b.slice(r*4,r*4+4).map(c=>'<td style="height:30mm">'+c+'</td>').join('')+'</tr>').join('')+'</table>')]}},
+village:{t:["Paper village houses","Casas da aldeia de papel"],b:d=>{const h=(w,ht,roof)=>'<svg viewBox="0 0 '+w+' '+(ht+roof+14)+'" style="width:'+(w*.55)+'mm;height:'+((ht+roof+14)*.55)+'mm"><g fill="none" stroke="#222" stroke-width="1.2" stroke-linejoin="round"><path d="M2 '+(roof)+'L'+(w/2)+' 2L'+(w-2)+' '+roof+'V'+(roof+ht)+'H2Z"/><rect x="'+(w/2-7)+'" y="'+(roof+ht-22)+'" width="14" height="22"/><rect x="10" y="'+(roof+10)+'" width="14" height="14"/><rect x="'+(w-24)+'" y="'+(roof+10)+'" width="14" height="14"/></g><rect x="2" y="'+(roof+ht)+'" width="'+(w-4)+'" height="12" fill="none" stroke="#999" stroke-dasharray="3 2"/></svg>';
+ return [B(140,x("Christmas village","Aldeia de Natal"),'<p style="margin:0 0 2mm;font-size:10.5pt">'+x("Colour, cut out and fold back the dotted tab so each house stands up. Glue on card to make it stronger.","Pinta, recorta e dobra para trás a aba tracejada para a casa ficar de pé. Cola em cartão para ficar mais forte.")+'</p><div style="display:flex;justify-content:space-between;align-items:end">'+h(90,70,40)+h(110,90,50)+h(80,60,36)+'</div>')]}},
+music:{t:["Music challenge card","Desafio musical"],b:d=>[B(140,x("Christmas music challenge","Desafio musical de Natal"),'<div style="display:grid;grid-template-columns:1.2fr 1fr;gap:5mm"><div><b>'+x("Hum it! Songs to guess","Cantarola! Canções para adivinhar")+'</b><ol style="font-size:11pt;padding-left:6mm;margin:1mm 0">'+x(["Jingle Bells","Silent Night","Rudolph the Red-Nosed Reindeer","Deck the Halls","We Wish You a Merry Christmas","Frosty the Snowman","Let It Snow","O Christmas Tree","Joy to the World","Feliz Navidad"],["Noite Feliz","Sinos de Belém","Jingle Bells","Pinheirinho, Pinheirinho","Bate o Sino","Rudolfo, a Rena","Feliz Navidad","Adeste Fideles","Já Nasceu o Deus Menino","Natal Branco"]).map(s=>'<li>'+s+'</li>').join('')+'</ol></div><div><b>'+x("Scores","Pontos")+'</b><table style="margin-top:1mm"><tr><th>'+x("Team","Equipa")+'</th><th>'+x("Points","Pontos")+'</th></tr>'+'<tr><td style="height:12mm"></td><td></td></tr>'.repeat(4)+'</table></div></div>')]},
+ginger:{t:["Gingerbread house designer","Desenha a casa de gengibre"],b:d=>[B(150,x("Design your gingerbread house","Desenha a tua casa de gengibre"),'<div style="display:grid;grid-template-columns:1.3fr 1fr;gap:5mm"><svg viewBox="0 0 100 100" style="width:100%;height:120mm"><g fill="none" stroke="#222" stroke-width="1" stroke-linejoin="round"><path d="M10 45L50 10L90 45V95H10Z"/><path d="M4 48L50 6L96 48" stroke-width="2.5"/><rect x="40" y="65" width="20" height="30" rx="10"/><rect x="18" y="55" width="14" height="14"/><rect x="68" y="55" width="14" height="14"/><rect x="66" y="16" width="10" height="16"/></g></svg><div><p style="margin:0;font-size:10.5pt">'+x("Plan the decorations on paper first, then build it for real.","Planeia as decorações no papel e depois constrói a casa a sério.")+'</p><b style="display:block;margin-top:3mm">'+x("Decorations we need","Decorações de que precisamos")+'</b>'+ln(6)+'</div></div>')]},
+props:{t:["Photo booth props","Adereços para fotos"],b:d=>[B(150,x("Photo booth props","Adereços para fotos"),'<p style="margin:0 0 2mm;font-size:10.5pt">'+x("Colour, cut out and tape each one to a straw or stick.","Pinta, recorta e cola cada um numa palhinha ou pauzinho.")+'</p><svg viewBox="0 0 200 120" style="width:100%;height:130mm"><g fill="none" stroke="#222" stroke-width="1.1" stroke-linejoin="round"><path d="M10 30q15-18 30-2q15-16 30 2q-10 14-30 6q-20 8-30-6z"/><circle cx="105" cy="28" r="14"/><circle cx="141" cy="28" r="14"/><path d="M119 28h8M91 26l-10-6M155 26l10-6"/><path d="M14 104Q30 60 60 50Q76 46 80 58Q66 58 62 70Q58 86 70 104Z"/><rect x="8" y="102" width="68" height="12" rx="6"/><circle cx="82" cy="58" r="6"/><path d="M100 60h88a6 6 0 0 1 6 6v26a6 6 0 0 1-6 6h-60l-12 12v-12h-16a6 6 0 0 1-6-6V66a6 6 0 0 1 6-6z"/></g><text x="146" y="84" text-anchor="middle" font-family="Grandstander,sans-serif" font-size="13" font-weight="800" fill="#c4232f">'+x("Ho ho ho!","Feliz Natal!")+'</text></svg>')]},
+tags:{t:["Gift tags","Etiquetas para prendas"],b:d=>[B(110,x("Gift tags","Etiquetas para prendas"),grid(4,('<div style="height:46mm;border:1.5px solid #222;border-radius:3mm 3mm 3mm 3mm;clip-path:polygon(18% 0,82% 0,100% 14%,100% 100%,0 100%,0 14%);padding:9mm 3mm 3mm;position:relative;font-size:10pt"><div style="position:absolute;top:3mm;left:50%;width:5mm;height:5mm;margin-left:-2.5mm;border:1.5px solid #222;border-radius:50%"></div><div style="text-align:center;color:#c4232f">★</div>'+x("To","Para")+':<div class="ln" style="height:7mm"></div>'+x("From","De")+':<div class="ln" style="height:7mm"></div></div>').repeat(8)))]},
+wish:{t:["Wish jar slips","Papelinhos de desejos"],b:d=>[B(150,x("Family wish jar","Frasco de desejos da família"),'<p style="margin:0 0 2mm;font-size:10.5pt">'+x("Write or draw a wish, fold it and pop it in the jar. Read them together on New Year’s Day.","Escreve ou desenha um desejo, dobra e põe no frasco. Leiam-nos juntos no dia de Ano Novo.")+'</p>'+grid(2,card(32,'<div class="note" style="font-size:13pt">'+x("I wish…","Eu desejo…")+'</div>'+ln(1)+'<div style="font-size:9pt">'+x("From","De")+': ________</div>').repeat(8)))]},
+charades:{t:["Charades cards","Cartões de mímica"],b:d=>{const W=x([["Easy","Reindeer","Penguin","Snowman","Santa","Elf","Bell","Present","Snowball"],["Medium","Building a snowman","Wrapping a present","Ice skating","Decorating the tree","Sledging","Eating mince pies","Hanging a stocking","Making a snow angel"],["Tricky","Rudolph","Jingle Bells","The Nutcracker","Frosty the Snowman","A Christmas Carol","Silent Night","Santa stuck in a chimney","An elf on a shelf"]],[["Fácil","Rena","Pinguim","Boneco de neve","Pai Natal","Duende","Sino","Prenda","Bola de neve"],["Médio","Fazer um boneco de neve","Embrulhar uma prenda","Patinar no gelo","Enfeitar a árvore","Andar de trenó","Comer bolo-rei","Pendurar uma meia","Fazer um anjo na neve"],["Difícil","Rudolfo, a rena","Noite Feliz","O Quebra-Nozes","Sozinho em Casa","Sinos de Belém","Um Conto de Natal","Pai Natal preso na chaminé","Duende na prateleira"]]);
+ return [B(150,x("Christmas charades","Mímica de Natal"),grid(4,W.flatMap(g=>g.slice(1).map(w=>card(30,'<div style="font-size:8pt;color:#c4232f;font-weight:800">'+g[0]+'</div><div class="note" style="font-size:12pt">'+w+'</div>','text-align:center;padding:2mm'))).join('')))]}},
+memories:{t:["My best moments of 2026","Os meus melhores momentos de 2026"],b:d=>(KIDS().length?KIDS():[null]).map(k=>B(190,x("My best moments of 2026","Os meus melhores momentos de 2026"),'<p style="margin:0">'+x("Name","Nome")+': '+(k?'<b>'+esc(k.name)+'</b>':'__________________')+' &nbsp; '+x("Age","Idade")+': ____</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:5mm;margin-top:3mm"><div><b>'+x("My favourite memory this year","A minha memória preferida deste ano")+'</b>'+box(80)+'</div><div><b>'+x("My top ten","O meu top dez")+'</b>'+[1,2,3,4,5,6,7,8,9,10].map(i=>'<div class="ln" style="height:8mm">'+i+'.</div>').join('')+'</div></div><b style="display:block;margin-top:3mm">'+x("Something I’m proud of","Algo de que tenho orgulho")+'</b>'+ln(2)+'<b style="display:block;margin-top:3mm">'+x("Next year I want to…","No próximo ano quero…")+'</b>'+ln(2)))},
+santa:{t:["Letter to Santa","Carta ao Pai Natal"],b:d=>(KIDS().length?KIDS():[null]).map(k=>B(190,x("Dear Santa","Querido Pai Natal"),'<p style="margin:0">'+(k?x("My name is <b>"+esc(k.name)+"</b> and I am ____ years old.","Chamo-me <b>"+esc(k.name)+"</b> e tenho ____ anos."):x("My name is __________________ and I am ____ years old.","Chamo-me __________________ e tenho ____ anos."))+'</p><b style="display:block;margin-top:3mm">'+x("This year I am proud that I…","Este ano tenho orgulho de…")+'</b>'+ln(2)+'<b style="display:block;margin-top:3mm">'+x("Something kind I did","Uma coisa boa que fiz")+'</b>'+ln(2)+'<b style="display:block;margin-top:3mm">'+x("I would love…","Gostava muito de…")+'</b>'+ln(2)+'<b style="display:block;margin-top:3mm">'+x("A picture for you","Um desenho para ti")+'</b>'+box(50)+'<p class="sig" style="font-size:12pt">'+x("Love from","Com carinho,")+' '+(k?'<b>'+esc(k.name)+'</b>':'__________________')+'</p>'))},
+// extras for the library
+notes:{t:["All 24 elf notes","Os 24 bilhetes do duende"],x:1,b:d=>{const o=[];for(let i=1;i<=24;i+=2)o.push(B(30,"",grid(2,[i,i+1].map(k=>{const s=L.S[scene(k)-1];return card(28,'<div style="font-size:8pt;color:#c4232f;font-weight:800">'+t.dayShort(k)+'</div><div class="note" style="font-size:12.5pt">“'+esc(s[3])+'”</div><div class="sig" style="font-size:9pt;margin-top:1mm">'+SIGN()+'</div>','padding:2mm 4mm')}).join(''))));return o}},
+letters:{t:["Extra elf letters","Cartas extra do duende"],x:1,b:d=>[letter("mystery",62),letter("encourage",62),letter("mission",66)]},
+tiny:{t:["Tiny elf notes","Mini bilhetes do duende"],x:1,b:d=>{const T=x(["I left a riddle. Can you solve it?","Today, create something from paper.","Find three things shaped like stars.","I need a team of brave builders.","Give someone a kind compliment.","Can you teach me a new word?","My hat is missing! Help!","I challenge you to a dance freeze.","Draw a picture of my home.","Make a card for someone special.","What can we reuse instead of throwing away?","Find a book we can read together.","I made a silly mistake. Can you spot it?","Your mission: invent a Christmas joke.","Try a puzzle with a sibling.","Tonight is family movie night!","Thank you for being my helpers.","You are the North Pole detective today.","I watched the snow fall all night. Brrr!","Hug someone you love today."],["Deixei uma adivinha. Conseguem resolvê-la?","Hoje, criem algo com papel.","Encontrem três coisas com forma de estrela.","Preciso de uma equipa de construtores corajosos.","Façam um elogio simpático a alguém.","Ensinam-me uma palavra nova?","O meu gorro desapareceu! Socorro!","Desafio-vos para uma dança-estátua.","Desenhem a minha casa.","Façam um postal para alguém especial.","O que podemos reutilizar em vez de deitar fora?","Encontrem um livro para lermos juntos.","Fiz um disparate. Conseguem descobri-lo?","A vossa missão: inventar uma piada de Natal.","Façam um enigma com um irmão.","Hoje há noite de cinema em família!","Obrigado por serem os meus ajudantes.","Hoje são os detetives do Polo Norte.","Vi a neve cair a noite toda. Brrr!","Deem um abraço a quem gostam."]);
+ return [B(132,x("Tiny elf notes","Mini bilhetes do duende"),grid(4,T.map(s=>card(24,'<span class="note" style="font-size:11pt">“'+s+'”</span>','padding:2mm 3mm;display:flex;align-items:center')).join('')))]}},
+scene:{t:["Draw your elf scene","Desenha a tua cena do duende"],x:1,b:d=>[B(170,x("Draw your own elf scene","Desenha a tua cena do duende"),'<p style="margin:0">'+x("Title","Título")+': ___________________________</p>'+box(90,x("The elf, its hiding place and three surprising objects","O duende, o esconderijo e três objetos surpreendentes"))+'<div style="display:grid;grid-template-columns:1fr 1fr;gap:5mm;margin-top:3mm"><div><b>'+x("A secret note","Um bilhete secreto")+'</b>'+ln(4)+'</div><div><b>'+x("Invent a riddle","Inventa uma adivinha")+'</b>'+ln(3)+'<div style="font-size:9.5pt;border-top:1.5px dashed #999;margin-top:2mm;padding-top:1mm">'+x("Answer (fold away)","Resposta (dobrar)")+': __________</div></div></div>')]},
+countdown:{t:["Countdown chart","Contagem decrescente"],x:1,b:d=>[B(262,x("Counting down to Christmas","Contagem decrescente para o Natal"),'<p style="margin:0 0 2mm;font-size:10.5pt">'+x("Colour in one star each day.","Pinta uma estrela por dia.")+'</p>'+grid(4,Array.from({length:24},(_,i)=>'<div style="text-align:center;position:relative">'+ostar(36)+'<div style="position:absolute;inset:0;display:grid;place-items:center;font:800 18pt Grandstander,sans-serif;color:#c4232f;padding-top:2mm">'+(i+1)+'</div></div>').join('')))]},
+plan:{t:["Our advent plan","O nosso plano do Advento"],x:1,b:d=>{const rows=Array.from({length:24},(_,i)=>{const k=i+1,s=L.S[scene(k)-1],n=L.N[i];return '<tr><td style="white-space:nowrap"><b>'+L.WD[wd(k)]+' '+k+'</b></td>'+(st.mode!=="noelf"?'<td>'+esc(s[0])+'</td>':'')+(st.mode!=="elf"?'<td>'+esc(n[0])+'</td>':'')+'<td style="width:12mm;text-align:center;color:#0f4a35;font-weight:800">'+doneMark(k)+'</td></tr>'}).join('');
+ return [B(262,x("Our advent plan · December 2026","O nosso plano do Advento · dezembro de 2026"),'<table><tr><th>'+x("Day","Dia")+'</th>'+(st.mode!=="noelf"?'<th>'+x("Elf scene (set up the night before)","Cena do duende (preparar na noite anterior)")+'</th>':'')+(st.mode!=="elf"?'<th>'+x("Family activity","Atividade em família")+'</th>':'')+'<th>✓</th></tr>'+rows+'</table>')]}}
+};
+// puzzles: sheet + answers for grown-ups
+const PZf=()=>({pa:["3–5",[[x("Count the stars","Conta as estrelas"),x("The elf sees ★ ★ ★ ★. How many stars? Draw one more.","O duende vê ★ ★ ★ ★. Quantas estrelas há? Desenha mais uma."),x("4, then 5.","4, depois 5.")],[x("What comes next?","O que vem a seguir?"),x("TREE – STAR – TREE – STAR – ____ – ____","ÁRVORE – ESTRELA – ÁRVORE – ESTRELA – ____ – ____"),x("TREE – STAR.","ÁRVORE – ESTRELA.")],[x("Odd one out","Qual é o intruso?"),x("SNOWMAN / MITTEN / SUNGLASSES / SLED","BONECO DE NEVE / LUVAS / ÓCULOS DE SOL / TRENÓ"),x("SUNGLASSES.","ÓCULOS DE SOL.")],[x("Little directions","Pequenas direções"),x("Put a toy UNDER a chair, NEXT TO it, then ON a cushion.","Põe um brinquedo DEBAIXO de uma cadeira, AO LADO dela e depois EM CIMA de uma almofada."),x("All three positions.","As três posições.")],[x("Christmas shapes","Formas de Natal"),x("Draw a circle bauble, a triangle tree and a square present.","Desenha uma bola redonda, uma árvore triangular e uma prenda quadrada."),x("Circle, triangle, square.","Círculo, triângulo, quadrado.")],[x("Rhyming ears","Ouvidos de rima"),x("What rhymes with BELL: SHELL or TREE? With SNOW: GO or STAR?","O que rima com SINO: PEPINO ou ÁRVORE? E com NEVE: LEVE ou ESTRELA?"),x("SHELL; GO.","PEPINO; LEVE.")]]],
+ pb:["6–8",[[x("Number code","Código de números"),x("A=1, B=2 … Z=26. Decode 19 – 14 – 15 – 23.","A=1, B=2 … Z=26. Decifra 14 – 5 – 22 – 5."),x("SNOW.","NEVE.")],[x("Missing stockings","Meias desaparecidas"),x("8 stockings. The elf hangs 3 more, then takes down 2. How many?","8 meias. O duende pendura mais 3 e tira 2. Quantas ficam?"),"9."],[x("Word scramble","Palavras baralhadas"),x("TARS, FLE, ERTE","NOSI, VENE, ATSEF"),x("STAR, ELF, TREE.","SINO, NEVE, FESTA.")],[x("Tiny logic","Pequena lógica"),x("Red, green and blue gifts. Red is not first. Blue is last. Green is not second. Order?","Prendas vermelha, verde e azul. A vermelha não é a primeira. A azul é a última. A verde não é a segunda. Qual a ordem?"),x("Green, red, blue.","Verde, vermelha, azul.")],[x("Secret acrostic","Acróstico secreto"),x("First letters: Snow / Angel / North / Tree / Apple","Primeiras letras: Neve / Anjo / Trenó / Árvore / Luzes"),x("SANTA.","NATAL.")],[x("Treasure clue","Pista do tesouro"),x("I have pages but I am not a tree. I tell stories but cannot speak.","Tenho folhas mas não sou árvore. Conto histórias mas não sei falar."),x("A book.","Um livro.")]]],
+ pc:["9–12",[[x("Caesar message","Mensagem de César"),x("Each letter moved 3 forward. Decode: PHHW WKH HOI","Cada letra avançou 3 lugares. Decifra: IHOLC QDWDO"),x("MEET THE ELF.","FELIZ NATAL.")],[x("Gift combinations","Combinações de embrulho"),x("3 wrapping papers and 4 ribbons. How many combinations?","3 papéis de embrulho e 4 fitas. Quantas combinações?"),"12."],[x("Pattern detective","Detetive de sequências"),"2, 5, 10, 17, 26, __, __",x("37, 50 (add 3, 5, 7, 9, 11, 13).","37, 50 (soma 3, 5, 7, 9, 11, 13).")],[x("Balance the sleigh","Equilibrar o trenó"),x("3 identical gifts weigh 2.4 kg. How much do 5 weigh?","3 prendas iguais pesam 2,4 kg. Quanto pesam 5?"),x("4.0 kg.","4,0 kg.")],[x("Elf’s schedule","O horário do duende"),x("12 min wrapping, 8 min writing, twice as long decorating as writing. Total?","12 min a embrulhar, 8 min a escrever e o dobro de escrever a decorar. Total?"),x("36 minutes.","36 minutos.")],[x("Logic line-up","Fila lógica"),x("Ava, Ben, Cleo. Ben is not in the middle. Ava is left of Cleo. Cleo is in the middle.","Ana, Bruno, Clara. O Bruno não está no meio. A Ana está à esquerda da Clara. A Clara está no meio."),x("Ava, Cleo, Ben.","Ana, Clara, Bruno.")]]],
+ pd:["13–15",[[x("Cryptogram","Criptograma"),x("Caesar shift +5: YMJ JQK NX MJWJ","Cifra de César +5: T IZJSIJ JXYF FVZN"),x("THE ELF IS HERE.","O DUENDE ESTA AQUI.")],[x("Probability","Probabilidades"),x("4 red, 3 green, 2 gold stars. Draw two without replacement. P(both red)?","4 estrelas vermelhas, 3 verdes, 2 douradas. Tiram-se duas sem reposição. P(ambas vermelhas)?"),"4/9 × 3/8 = 1/6."],[x("Optimisation","Otimização"),x("20 m of ribbon. Each gift needs 1.5 m plus 0.25 m for a bow. Max complete gifts?","20 m de fita. Cada prenda leva 1,5 m mais 0,25 m de laço. Máximo de prendas?"),x("11 (0.75 m left).","11 (sobram 0,75 m).")],[x("Deduction","Dedução"),x("Ash, Birch, Cedar brought a bell, candle or star. Ash: not the bell. Birch: neither candle nor star. Cedar: not the candle.","Abeto, Bétula e Cedro trouxeram sino, vela ou estrela. Abeto: não o sino. Bétula: nem vela nem estrela. Cedro: não a vela."),x("Birch bell, Cedar star, Ash candle.","Bétula sino, Cedro estrela, Abeto vela.")],[x("Algebra","Álgebra"),x("3 ornaments + 2 stars = 19 points. 1 ornament + 2 stars = 11 points.","3 enfeites + 2 estrelas = 19 pontos. 1 enfeite + 2 estrelas = 11 pontos."),x("Ornament 4, star 3.5.","Enfeite 4, estrela 3,5.")],[x("Design a cipher","Inventa uma cifra"),x("Invent a substitution alphabet and encode KINDNESS IS MAGIC.","Inventa um alfabeto de substituição e codifica A BONDADE E MAGIA."),x("Open-ended: each letter must always map the same way.","Resposta livre: cada letra corresponde sempre à mesma.")]]]});
+["pa","pb","pc","pd"].forEach(k=>{R[k]={x:1,t:[" "," "],b:d=>{const z=PZf()[k];return [B(250,x("Elf puzzles, ages ","Enigmas do duende, ")+z[0]+x(""," anos"),z[1].map((q,i)=>'<div class="pz" style="height:37mm"><b>'+(i+1)+'. '+q[0]+'</b><br>'+esc(q[1])+'</div>').join(''))]},ans:()=>PZf()[k][1].map((q,i)=>(i+1)+'. '+q[2]).join(' · ')};});
+const PZT=k=>x("Puzzles, ages ","Enigmas, ")+PZf()[k][0]+x(""," anos");
+const title=id=>/^p[a-d]$/.test(id)?PZT(id):x(R[id].t[0],R[id].t[1]);
+
+// which sheet goes with each activity
+const SE={1:["arrival"],2:["snow"],3:["tea"],4:["score"],5:["story"],6:["kindcards"],7:["clues"],8:["comic"],9:["lab"],10:["art"],11:["teddy"],12:["course"],13:["ornaments"],14:["lab"],15:["mirror"],16:["colours"],17:["script"],18:["lab"],19:["hat"],20:["dance"],21:["recipe"],22:["tickets"],23:["code"],24:["mallow"],25:["lab"],26:["postcard"],27:["detective"],28:["stars"],29:["coupons"],30:["goodbye"]};
+const SN={1:["colour"],2:["dance"],3:["card"],4:["score"],5:["biscuits"],6:["bingo"],7:["snow"],8:["story"],9:["village"],10:["coupons"],11:["course"],12:["ornaments"],13:["clues"],14:["tickets"],15:["music"],16:["ginger"],17:["lab"],18:["props"],19:["tags"],20:["postcard"],21:["wish"],22:["charades"],23:["memories"],24:["santa"]};
+R.clues={t:["Treasure hunt clues","Pistas da caça ao tesouro"],b:d=>{const C=x([["Where cold things stay and milk keeps cool, the next clue waits. Don’t be a fool!","Fridge"],["Where you sit and watch TV, look under me for the next clue, see!","Sofa"],["I’m full of stories, tall and wide. Check my shelves, your clue’s inside!","Bookshelf"],["Splish and splash, bubbles galore. Look by the bath, then find some more!","Bath"],["You sleep on me every night. Look beneath your pillow, tight!","Bed"],["Laces, buckles, left and right. Look in a shoe, out of sight!","Shoes"],["I’m green and twinkly, dressed with care. Look in my branches, it’s hiding there!","Christmas tree"],["I spin your socks round and round. Look inside, the prize is found!","Washing machine"]],[["Onde o leite fica fresquinho, a pista espera no cantinho!","Frigorífico"],["No sofá onde vês televisão, espreita as almofadas com atenção!","Sofá"],["Sou cheia de histórias, alta e elegante. A pista está escondida na estante!","Estante"],["Água, espuma e brincadeira. A pista está junto à banheira!","Banheira"],["Onde dormes de pijama? Procura debaixo da cama!","Cama"],["Andamos sempre aos pares, esquerdo e direito. Espreita nos sapatos, com muito jeito!","Sapatos"],["Sou verde e brilho sem parar. Nos meus ramos a pista vais encontrar!","Árvore de Natal"],["Ponho as meias a girar e a rodar. A pista está na máquina de lavar!","Máquina de lavar"]]);
+ return [B(150,x("Treasure hunt clues","Pistas da caça ao tesouro"),'<p style="margin:0 0 2mm;font-size:10.5pt">'+x("Number the cards and hide each one where the clue before it points. The answer is in tiny print for the grown-up. Ages 3–5: draw a picture of the spot instead.","Numerem os cartões e escondam cada um no sítio indicado pela pista anterior. A resposta está em letra pequena para o adulto. 3–5 anos: desenhem o sítio em vez de escrever.")+'</p>'+grid(2,C.map(c=>card(30,'<b style="color:#c4232f">'+x("Clue","Pista")+' ___</b><div style="font-size:11pt">'+c[0]+'</div><div style="position:absolute;bottom:1.5mm;right:3mm;font-size:7.5pt;color:#999">'+c[1]+'</div>','position:relative;padding:2mm 4mm')).join('')))]}};
+R.tickets.t=["Cinema tickets and film quiz","Bilhetes de cinema e quiz"];
+
+// measure each block's real height, then pack first-fit onto A4 pages (269 mm usable, 6 mm cut gap)
+let meas=null;
+function measure(b){if(!meas){meas=document.createElement("div");meas.style.cssText="position:absolute;left:-9999px;top:0;visibility:hidden";document.body.appendChild(meas)}
+ meas.innerHTML='<div class="sheet" style="height:auto">'+blkHTML(b,0).replace('style="height:0mm"','')+'</div>';
+ const px=meas.querySelector(".blk").offsetHeight;return Math.min(269,Math.ceil(px/3.7795)+3)}
+function pack(blocks,ff){const pages=[];
+ blocks.forEach(b=>{const h=measure(b);let p=ff?pages.find(q=>q.used+6+h<=269):(pages.length&&pages[pages.length-1].used+6+h<=269?pages[pages.length-1]:null);
+  if(!p){p={used:-6,items:[]};pages.push(p)}p.used+=6+h;p.items.push(blkHTML(b,h))});
+ return pages.map(p=>'<div class="sheet"><div class="fr"></div><svg class="holly hl"><use href="#holly"/></svg><svg class="holly hr"><use href="#holly"/></svg>'+p.items.join('<div class="cutline">✂</div>')+'</div>')}
+const actLabel=(d,name)=>t.dayShort(d)+" · "+esc(name);
+function blocksFor(id,d){const bl=R[id].b(d);return bl}
+function activityBlocks(kind,d){
+ if(kind==="e"){const sc=scene(d),s=L.S[sc-1];return [noteCard(d)].concat(...SE[sc].map(id=>blocksFor(id,d).map((b,i)=>i?b:relabel(b,actLabel(d,s[0])))))}
+ const n=L.N[d-1];return [].concat(...SN[d].map(id=>blocksFor(id,d).map((b,i)=>i?b:relabel(b,actLabel(d,n[0])))))}
+const relabel=(b,l)=>Object.assign({},b,{label:l});
+const answersFor=ids=>ids.map(id=>R[id]&&R[id].ans?R[id].ans():null).filter(Boolean);
+function everything(){let o=st.mode!=="noelf"?R.notes.b():[],seen=new Set();
+ for(let d=1;d<=24;d++){
+  if(st.mode!=="noelf"){const sc=scene(d),s=L.S[sc-1];SE[sc].forEach(id=>{if(!seen.has(id)){seen.add(id);o=o.concat(blocksFor(id,d).map((b,i)=>i?b:relabel(b,actLabel(d,s[0]))))}})}
+  if(st.mode!=="elf"){const n=L.N[d-1];SN[d].forEach(id=>{if(!seen.has(id)){seen.add(id);o=o.concat(blocksFor(id,d).map((b,i)=>i?b:relabel(b,actLabel(d,n[0]))))}})}}
+ ["letters","tiny","pa","pb","pc","pd","scene","countdown","plan"].forEach(k=>{o=o.concat(R[k].b(st.sel))});
+ return o}
+
+const T={
+en:{count:(left,c)=>(left>0?left+(left===1?" day":" days")+" until door 1 · ":"")+c+" of 24 days done",
+ door:(d,date,s)=>"Door "+d+", "+date+(s===2?", done":s===1?", partly done":""),
+ withElf:"With the elf",without:"Without the elf",
+ setup:d=>"Set up the night before ("+(d>1?(d-1)+" Dec":"30 Nov")+"):",
+ swap:"Swap for another elf scene",spare:" (spare)",
+ did:"We did this",didOn:"Done",dayDone:"Day complete",
+ noteL:"How did it go?",noteH:"Saved in this browser only",notePh:"Who joined in, what made everyone laugh, what to remember…",
+ printE:"Print the elf note and sheet",printN:"Print the activity sheet",ans:"Answers for grown-ups",
+ view:"Preview and print",allT:"Everything in one file",allD:"Every activity sheet for the days you chose, plus the extras, packed several to a page. Each sheet appears once.",
+ pages:n=>n+(n===1?" A4 page":" A4 pages"),dayShort:d=>d+" Dec",
+ edit:"Click any text on the sheet to change it before printing.",reset:"Undo my changes",
+ dlHint:"Downloads a print-ready file. Open it and press Print.",noDl:"Downloading isn’t available in this view. Open the page on claude.ai, or use the PDF pack from the chat.",
+ saved:"Saved. Open the file in your browser and press Print.",cancelled:"Download cancelled.",failed:"Couldn’t download here. Use the PDF pack from the chat instead.",
+ allFile:"christmas-printables",allTitle:"Christmas printables",bar:"Print",barNote:"A4, no margins, background graphics on.",title:"Christmas Advent Planner",
+ kids:"Children’s names",kidPh:"Name",add:"Add",rm:"Remove",hi:n=>"Hi "+n+"!",
+ ansH:"Answers for grown-ups",ansP:"Puzzle and activity answers. Keep them away from little eyes!"},
+pt:{count:(left,c)=>(left>0?(left===1?"Falta 1 dia":"Faltam "+left+" dias")+" para a porta 1 · ":"")+c+" de 24 dias feitos",
+ door:(d,date,s)=>"Porta "+d+", "+date+(s===2?", feito":s===1?", meio feito":""),
+ withElf:"Com o duende",without:"Sem o duende",
+ setup:d=>"Preparar na noite anterior ("+(d>1?(d-1)+" dez":"30 nov")+"):",
+ swap:"Trocar por outra cena",spare:" (extra)",
+ did:"Fizemos isto",didOn:"Feito",dayDone:"Dia completo",
+ noteL:"Como correu?",noteH:"Fica guardado só neste navegador",notePh:"Quem participou, o que vos fez rir, o que querem lembrar…",
+ printE:"Imprimir o bilhete e a folha",printN:"Imprimir a folha da atividade",ans:"Soluções para os pais",
+ view:"Ver e imprimir",allT:"Tudo num só ficheiro",allD:"Todas as folhas das atividades dos dias escolhidos, mais os extras, várias por página. Cada folha aparece uma só vez.",
+ pages:n=>n+(n===1?" página A4":" páginas A4"),dayShort:d=>d+" dez",
+ edit:"Clica em qualquer texto da folha para o mudar antes de imprimir.",reset:"Desfazer as minhas alterações",
+ dlHint:"Descarrega um ficheiro pronto a imprimir. Abre-o e carrega em Imprimir.",noDl:"Não é possível descarregar nesta vista. Abre a página no claude.ai, ou usa o PDF enviado na conversa.",
+ saved:"Guardado. Abre o ficheiro no navegador e carrega em Imprimir.",cancelled:"Transferência cancelada.",failed:"Não foi possível descarregar aqui. Usa o PDF enviado na conversa.",
+ allFile:"folhas-de-natal",allTitle:"Folhas de Natal para imprimir",bar:"Imprimir",barNote:"A4, sem margens, com gráficos de fundo.",title:"Calendário do Advento",
+ kids:"Nomes dos filhos",kidPh:"Nome",add:"Juntar",rm:"Tirar",hi:n=>"Olá, "+n+"!",
+ ansH:"Soluções para os pais",ansP:"Respostas dos enigmas e das atividades. Longe dos olhos dos mais pequenos!"}};
+
+const $=id=>document.getElementById(id);
+let L,t;
+const setLang=()=>{L=LANG[st.lang];t=T[st.lang];document.documentElement.lang=st.lang==="pt"?"pt-PT":"en";document.title=t.title};
+const tick='<svg class="tk" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="#fff"/><path d="M6.5 12.5l3.5 3.5 7.5-8" fill="none" stroke="#16613f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+function renderTop(){
+ document.querySelectorAll("#mode button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.m===st.mode));
+ document.querySelectorAll("#lang button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===st.lang));
+ $("ages").innerHTML=AGES.map(a=>'<button class="chip" data-a="'+a[0]+'" aria-pressed="'+st.ages.includes(a[0])+'">'+a[1]+'</button>').join('');
+ $("kidsl").textContent=t.kids;$("kn").placeholder=t.kidPh;$("kadd").textContent=t.add;
+ $("ka").innerHTML=AGES.map(a=>'<option value="'+a[0]+'"'+(a[0]===($("ka").value||"b")?' selected':'')+'>'+a[1]+'</option>').join('');
+ $("kids").innerHTML=(st.kids||[]).map((k,i)=>'<span class="kid">'+esc(k.name)+' <small>'+AGES.find(a=>a[0]===k.age)[1]+'</small><button data-rk="'+i+'" aria-label="'+t.rm+' '+esc(k.name)+'">×</button></span>').join('');
+ let c=0;for(let d=1;d<=24;d++)if(dayState(d)===2)c++;
+ const left=Math.ceil((new Date(2026,11,1)-now)/864e5);
+ $("count").textContent=t.count(left,c);
+ $("bar").style.width=(c/24*100)+"%";
+}
+function renderCal(){
+ $("cal").innerHTML=ORDER.map((d,i)=>{const s=dayState(d);return '<button class="door c'+(i%4)+(d===24?' eve':'')+(d===todayD?' today':'')+(d===st.sel?' sel':'')+(s===2?' fin':'')+'" data-d="'+d+'" aria-label="'+esc(t.door(d,L.dateL(d),s))+'"><span class="wd">'+L.WD[wd(d)]+'</span>'+d+(s===2?star:s===1?tick:'')+'</button>'}).join('');
+}
+const ageRows=a=>{const sel=st.ages.length?st.ages:AGES.map(x=>x[0]);return '<ul class="ages">'+AGES.filter(x=>sel.includes(x[0])).map(x=>{const nm=(st.kids||[]).filter(k=>k.age===x[0]).map(k=>esc(k.name)).join(', ');return '<li><b>'+x[1]+'</b><span>'+(nm?'<em class="kn">'+nm+':</em> ':'')+esc(a["abcd".indexOf(x[0])])+'</span></li>'}).join('')+'</ul>'};
+const chk=(k,on)=>'<button class="chk" data-k="'+k+'" aria-pressed="'+on+'"><span class="bx">'+(on?'✓':'')+'</span>'+(on?t.didOn:t.did)+'</button>';
+const ansBox=ids=>{const a=answersFor(ids);return a.length?'<details class="ans"><summary>'+t.ans+'</summary><p>'+a.map(esc).join('<br>')+'</p></details>':''};
+const pbtn=(k,ids,lab)=>'<div class="prs"><button class="pbtn" data-pa="'+k+'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M7 14h10v7H7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>'+lab+'</button><span class="ptl">'+ids.map(title).join(' · ')+'</span></div>';
+function renderDay(){
+ const d=st.sel,sc=scene(d),s=L.S[sc-1],n=L.N[d-1],r=rec(d);
+ const elf='<article class="card'+(r.e?' ok':'')+'"><svg class="celf" aria-hidden="true"><use href="#elf"/></svg><div class="kind">'+t.withElf+' <span class="tag">'+s[4]+'</span></div><h3>'+esc(s[0])+'</h3><p class="setup"><b>'+t.setup(d)+'</b> '+esc(s[1])+'</p><div class="note">“'+esc(s[3])+'”</div>'+ageRows(s[2])+pbtn("e",SE[sc],t.printE)+ansBox(SE[sc])+'<label class="swap" for="sw">'+t.swap+' <select id="sw">'+L.S.map((q,i)=>'<option value="'+(i+1)+'"'+(i+1===sc?' selected':'')+'>'+(i+1)+'. '+esc(q[0])+(DEF.includes(i+1)?'':t.spare)+'</option>').join('')+'</select></label><div class="cf">'+chk("e",!!r.e)+'</div></article>';
+ const ne='<article class="card ne'+(r.n?' ok':'')+'"><svg class="holly ch" aria-hidden="true"><use href="#holly"/></svg><div class="kind">'+t.without+'</div><h3>'+esc(n[0])+'</h3>'+ageRows(n[1])+pbtn("n",SN[d],t.printN)+ansBox(SN[d])+'<div class="cf">'+chk("n",!!r.n)+'</div></article>';
+ $("day").innerHTML=(KN()?'<p class="hi">'+t.hi(KN())+'</p>':'')+'<div class="dayhd"><h2>'+L.head(d)+'</h2>'+(dayState(d)===2?'<span class="badge">★ '+t.dayDone+'</span>':'')+'</div>'+(st.mode!=="noelf"?elf:'')+(st.mode!=="elf"?ne:'')+'<div class="memo"><label for="memo">'+t.noteL+' <small>'+t.noteH+'</small></label><textarea id="memo" rows="3" placeholder="'+esc(t.notePh)+'">'+esc(r.txt||'')+'</textarea></div>';
+}
+function renderList(){
+ const ex=["notes","letters","tiny","pa","pb","pc","pd","scene","countdown","plan"];
+ $("plist").innerHTML='<div class="pcard big"><svg class="pelf" aria-hidden="true"><use href="#elf"/></svg><h3>'+t.allT+'</h3><p>'+t.allD+'</p><div class="row"><button class="btn red" data-px="all">'+t.view+'</button></div></div>'+ex.map(id=>'<div class="pcard"><h3>'+title(id)+'</h3><div class="row"><button class="btn" data-px="'+id+'">'+t.view+'</button></div></div>').join('');
+}
+function renderAns(){
+ const acts=["code","mallow","detective","stars","recipe","hat"];
+ $("answers").innerHTML='<h3>'+t.ansH+'</h3><p class="lead">'+t.ansP+'</p><div class="agrid">'+["pa","pb","pc","pd"].map(k=>'<details><summary>'+PZT(k)+'</summary><ol>'+PZf()[k][1].map(q=>'<li><b>'+esc(q[0])+':</b> '+esc(q[2])+'</li>').join('')+'</ol></details>').join('')+acts.map(k=>'<details><summary>'+title(k)+'</summary><p>'+esc(R[k].ans())+'</p></details>').join('')+'</div>';
+}
+const all=()=>{setLang();renderTop();renderCal();renderDay();renderList();renderAns();save()};
+
+let cur=null,dls=null;
+function openSheets(key,ttl,blocks){
+ cur={key,ttl};const pages=pack(blocks,key==="all");
+ $("mt").textContent=ttl;$("mp").textContent=t.pages(pages.length);
+ const saved=key!=="all"&&st.edits&&st.edits[key];
+ $("pvin").innerHTML=saved||pages.join("");
+ $("pvin").querySelectorAll(".sheet").forEach(s=>{s.contentEditable="true";s.spellcheck=false});
+ $("rs").hidden=!saved;$("mmsg").textContent=t.edit+" "+t.dlHint;
+ $("modal").classList.add("on");$("mx").focus();requestAnimationFrame(fit)}
+function fit(){const pv=$("pv"),inn=$("pvin"),sc=Math.min(1,(pv.clientWidth-24)/794);inn.style.width="794px";inn.style.transform="scale("+sc+")";inn.style.marginBottom=-(inn.offsetHeight*(1-sc))+"px"}
+const fitObs=new ResizeObserver(()=>{if($("modal").classList.contains("on"))fit()});
+fitObs.observe($("pv"));
+const pagesHTML=()=>$("pvin").innerHTML.replace(/ contenteditable="true"/g,"").replace(/ spellcheck="false"/g,"");
+function fileFor(html,ttl){const css=$("sheetcss").textContent;return '<!DOCTYPE html><html lang="'+(st.lang==="pt"?"pt-PT":"en")+'"><head><meta charset="utf-8"><title>'+esc(ttl)+'</title><link href="https://fonts.googleapis.com/css2?family=Grandstander:wght@600;800&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet"><style>@page{size:A4;margin:0}body{margin:0;background:#cfcfcf}.bar{font:16px Nunito,Arial;text-align:center;padding:12px}.bar button{font:inherit;font-weight:800;padding:10px 20px;border:0;border-radius:10px;background:#c4232f;color:#fff;cursor:pointer}.sheet{margin:10mm auto;box-shadow:0 2px 8px rgba(0,0,0,.25)}@media print{.bar{display:none}body{background:#fff}.sheet{margin:0;box-shadow:none}}'+css+'</style></head><body>'+$("defs").outerHTML+'<div class="bar"><button onclick="print()">'+t.bar+'</button> &nbsp;'+t.barNote+'</div>'+html+'</body></html>'}
+const slug=s=>s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
+$("dl").onclick=async()=>{if(!dls){const blob=new Blob([fileFor(pagesHTML(),cur.ttl)],{type:"text/html"});const u=URL.createObjectURL(blob);const l=document.createElement("a");l.href=u;l.download=(cur.key==="all"?t.allFile:slug(cur.ttl))+".html";document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);$("mmsg").textContent=t.saved;return}
+ try{await dls.save({filename:(cur.key==="all"?t.allFile:slug(cur.ttl))+".html",data:fileFor(pagesHTML(),cur.ttl)});$("mmsg").textContent=t.saved}catch(e){$("mmsg").textContent=e&&e.code==="declined"?t.cancelled:t.failed}};
+$("rs").onclick=()=>{if(st.edits)delete st.edits[cur.key];save();reopen()};
+let reopen=()=>{};
+$("pvin").addEventListener("input",()=>{if(!cur||cur.key==="all")return;st.edits=st.edits||{};st.edits[cur.key]=pagesHTML();$("rs").hidden=false;save()});
+$("mx").onclick=()=>$("modal").classList.remove("on");
+$("modal").addEventListener("click",e=>{if(e.target.id==="modal")$("modal").classList.remove("on")});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("modal").classList.contains("on")){e.preventDefault();$("modal").classList.remove("on")}});
+function openAct(k){const d=st.sel;const key=st.lang+":"+k+":"+d+":"+(k==="e"?scene(d):"");
+ const name=k==="e"?L.S[scene(d)-1][0]:L.N[d-1][0];
+ reopen=()=>openSheets(key,t.dayShort(d)+" · "+name,activityBlocks(k,d));reopen()}
+function openX(id){if(id==="all"){reopen=()=>openSheets("all",t.allTitle,everything())}else{reopen=()=>openSheets(st.lang+":"+id+(id==="plan"?":"+JSON.stringify(st.done).length:""),title(id),R[id].b(st.sel))}reopen()}
+document.addEventListener("click",e=>{
+ const b=e.target.closest("button");if(!b||b.closest("#pvin"))return;
+ if(b.dataset.m){st.mode=b.dataset.m;all()}
+ else if(b.dataset.lang){st.lang=b.dataset.lang;all()}
+ else if(b.dataset.a){const a=b.dataset.a;st.ages=st.ages.includes(a)?st.ages.filter(x=>x!==a):st.ages.concat(a).sort();all()}
+ else if(b.dataset.d){st.sel=+b.dataset.d;all();if(innerWidth<900)$("day").scrollIntoView({behavior:"smooth"})}
+ else if(b.dataset.k){const r=rec(st.sel);r[b.dataset.k]=!r[b.dataset.k];st.done[st.sel]=r;all()}
+ else if(b.dataset.pa)openAct(b.dataset.pa);
+ else if(b.dataset.rk){st.kids.splice(+b.dataset.rk,1);all()}
+ else if(b.id==="kadd")addKid();
+ else if(b.dataset.px)openX(b.dataset.px);
+});
+document.addEventListener("change",e=>{if(e.target.id==="sw"){const v=+e.target.value;if(v===DEF[st.sel-1])delete st.swap[st.sel];else st.swap[st.sel]=v;all()}});
+document.addEventListener("input",e=>{if(e.target.id==="memo"){const r=rec(st.sel);r.txt=e.target.value;st.done[st.sel]=r;save()}});
+function addKid(){const n=$("kn").value.trim();if(!n)return;const a=$("ka").value||"b";st.kids=(st.kids||[]).concat({name:n.slice(0,30),age:a});if(!st.ages.includes(a))st.ages=st.ages.concat(a).sort();$("kn").value="";all();$("kn").focus()}
+$("kn").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();addKid()}});
+all();
+if(window.claude&&claude.use)claude.use("downloads").then(x=>{dls=x}).catch(()=>{});
+window.__sheets={everything,pack,fileFor,setL:l=>{st.lang=l;all()},openAct,openX};
+
+}
+</script>
+</body>
+</html>
