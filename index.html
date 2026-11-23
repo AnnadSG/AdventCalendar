@@ -174,6 +174,36 @@ details.ans summary,#answers summary{cursor:pointer;font-weight:800}
 .foot{font-size:14px;color:var(--soft);text-align:center;padding-bottom:40px}
 @media(max-width:900px){.main{grid-template-columns:minmax(0,1fr)}.day{position:static}.agegrid{grid-template-columns:repeat(2,minmax(0,1fr))}.cols{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:600px){.cal{grid-template-columns:repeat(4,minmax(0,1fr))}.agegrid{grid-template-columns:minmax(0,1fr)}.seg button,.chip{padding:6px 12px;font-size:14px}}
+.lband{background:var(--pine);color:#fff}
+.lband .lead{color:#d9eadf}
+.libfill{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;background:#0a3326;border-radius:18px;padding:14px 16px;margin-bottom:18px}
+.libfill .lab{font-weight:800;color:#cfe3d6}
+.seg.dk{background:#062a1c}
+.fmsg{margin:0;width:100%;font-weight:800;color:var(--gold)}
+.fmsg:empty{display:none}
+.fnote{margin:0;width:100%;font-size:14px;color:#a9c7b5}
+.libtabs{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:16px}
+.lchip{font-size:14px;min-height:36px;padding:4px 12px}
+.libgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.icard{background:var(--paper);color:var(--ink);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:6px;border-top:7px solid #2c7a52}
+.icard.c-n{border-color:var(--berry)}.icard.c-p{border-color:var(--gold)}.icard.c-t{border-color:#5b6fd6}
+.icard.used{box-shadow:0 0 0 3px var(--gold)}
+.itop{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.inum{font:800 14px Grandstander,sans-serif;color:var(--soft)}
+.icard h3{font-size:21px}
+.isetup{margin:0;font-size:15px;flex:1}
+.inote{font-family:Grandstander,sans-serif;font-size:16px;background:var(--tint);border-radius:10px;padding:8px 12px}
+.imeta{margin:0;font-size:13px;color:var(--soft)}
+.irow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:4px}
+.irow select{flex:1;font-size:15px}
+.ion{font-size:14px;font-weight:800;color:var(--soft);display:flex;flex-wrap:wrap;gap:4px;align-items:center;width:100%}
+.dpill{font:800 13px Nunito,sans-serif;border:0;border-radius:999px;background:var(--gold);color:#2b1e00;padding:4px 10px;min-height:30px;cursor:pointer}
+.libsafe{font-size:14px;color:#a9c7b5;margin:16px 0 0}
+.ibook{margin:10px 0 0;font-size:15px;color:var(--soft)}
+.lock{margin:12px 0 0;font-size:14px;font-weight:800;color:var(--soft)}
+.lnk{font:inherit;font-size:14px;font-weight:800;background:none;border:0;color:var(--berry);text-decoration:underline;cursor:pointer;padding:6px 0;margin-top:4px}
+.tag.ib{background:var(--gold);color:#2b1e00;margin-left:2px}
+.swap select{max-width:min(100%,340px)}
 </style>
 <style id="sheetcss">
 .sheet{width:210mm;height:297mm;padding:14mm;background:#fff;color:#1b1b1b;font:12pt/1.45 Nunito,Arial,sans-serif;position:relative;overflow:hidden;break-after:page;page-break-after:always}
@@ -289,6 +319,17 @@ details.ans summary,#answers summary{cursor:pointer;font-weight:800}
   </div>
 </main>
 
+<section class="band sec lband" id="library">
+  <div class="wrap">
+    <h2 class="sech"><svg aria-hidden="true"><use href="#holly"/></svg><span data-libh></span></h2>
+    <p class="lead" id="libp"></p>
+    <div class="libfill" id="libfill"></div>
+    <div class="libtabs" id="libtabs"></div>
+    <div class="libgrid" id="libgrid"></div>
+    <p class="libsafe" id="libsafe"></p>
+  </div>
+</section>
+
 <section class="band sec" id="printables">
   <div class="wrap">
     <h2 class="sech"><svg aria-hidden="true"><use href="#holly"/></svg><span class="en">Printable sheets</span><span class="pt">Folhas para imprimir</span></h2>
@@ -328,7 +369,7 @@ details.ans summary,#answers summary{cursor:pointer;font-weight:800}
     </div>
   </div><div id="answers"></div></div>
 </section>
-<p class="foot band"><span class="en">Activities adapted from your “24 Days of Christmas Magic” calendar and “The Christmas Elf” activity book. Ages 9–12 versions of the no-elf days are new additions.</span><span class="pt">Atividades adaptadas do teu calendário “24 Days of Christmas Magic” e do livro “The Christmas Elf”. As versões dos 9–12 anos das atividades sem duende são novas. Enigmas, rimas e códigos foram adaptados para português.</span></p>
+<p class="foot band"><span class="en">Activities adapted from your “24 Days of Christmas Magic” calendar and “The Christmas Elf” activity book. Inspiration ideas from “The Big Book of Funny Elf Pranks”. Ages 9–12 versions of the no-elf days are new additions.</span><span class="pt">Atividades adaptadas do teu calendário “24 Days of Christmas Magic” e do livro “The Christmas Elf”. Ideias de inspiração do livro “The Big Book of Funny Elf Pranks”. As versões dos 9–12 anos das atividades sem duende são novas. Enigmas, rimas e códigos foram adaptados para português.</span></p>
 
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mt">
   <div class="mbar"><h3 id="mt"></h3><span class="mp" id="mp"></span><button class="btn alt" id="rs" hidden><span class="en">Undo my changes</span><span class="pt">Desfazer as minhas alterações</span></button><button class="btn big" id="dl"><span class="en">Download to print</span><span class="pt">Descarregar para imprimir</span></button><button class="btn alt" id="mx"><span class="en">Close</span><span class="pt">Fechar</span></button><div class="msg" id="mmsg"></div></div>
@@ -348,7 +389,10 @@ const save=()=>{try{localStorage.setItem("advent2026v2",JSON.stringify(st))}catc
 const now=new Date();
 const todayD=(now.getFullYear()===2026&&now.getMonth()===11&&now.getDate()<=24)?now.getDate():0;
 if(!st.sel)st.sel=todayD||1;
-const scene=d=>st.swap[d]||DEF[d-1];
+const LOCK={1:1,24:30};
+delete st.swap[1];delete st.swap[24];
+const scene=d=>LOCK[d]||st.swap[d]||DEF[d-1];
+const isIdea=sc=>sc>=31;
 const rec=d=>Object.assign({},st.done[d]||{});
 const dayState=d=>{const r=rec(d),k=st.mode==="elf"?["e"]:st.mode==="noelf"?["n"]:["e","n"],c=k.filter(x=>r[x]).length;return c===k.length?2:(c||r.e||r.n)?1:0};
 const doneMark=d=>dayState(d)===2?"✓":"";
@@ -476,6 +520,78 @@ const N=[
 ["Magia da Consoada",["Deitar um peluche e dar as boas-noites.","Deixar um desenho ou um bilhete ao Pai Natal.","Pôr o sapatinho junto à lareira ou à árvore e escrever ao Pai Natal.","Ajudar a pôr a mesa da Consoada e começar uma tradição de família."],"santa"]];
 const dateL=d=>WDL[wd(d)]+", "+d+" de dezembro";const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
 return {S,N,WD,WDL,dateL,head:d=>cap(dateL(d))}})();
+// ---------- inspiration book: 65 funny elf ideas, appended to the scene list as ids 31–95 ----------
+const I0=31;
+const ICAT={q:["Quick & easy","Rápida e fácil","under 5 min","até 5 min"],n:["Hilariously naughty","Travessura hilariante","5–10 min","5–10 min"],p:["Photo-worthy","Cena para foto","10–25 min","10–25 min"],t:["Teen humour","Humor para crescidos","5–20 min","5–20 min"]};
+const IDEAS=[
+["q","Banana bandits","Draw silly faces on banana peels; the elf holds a marker.","I gave the bananas personalities. They are very dramatic.","Bananas bandidas","Desenha caras divertidas nas cascas das bananas; o duende segura uma caneta.","Dei personalidade às bananas. São muito dramáticas."],
+["q","Cookie criminal","Put the elf halfway into a biscuit tin, with crumbs nearby.","I regret nothing.","O ladrão de bolachas","Põe o duende meio enfiado numa lata de bolachas, com migalhas à volta.","Não me arrependo de nada."],
+["q","Marshmallow bath","Sit the elf in a dry bowl of marshmallows.","Spa day. No appointments available.","Banho de marshmallows","Senta o duende numa taça seca cheia de marshmallows.","Dia de spa. Não há marcações disponíveis."],
+["q","Sock sleeping bag","Tuck the elf into a clean sock on the sofa.","Five-star accommodation.","Saco-cama de meia","Aconchega o duende dentro de uma meia lavada, no sofá.","Alojamento de cinco estrelas."],
+["q","Toy car getaway","Seat the elf in a toy car with a biscuit.","You will never catch me!","Fuga de carrinho","Senta o duende num carrinho de brincar com uma bolacha.","Nunca me vão apanhar!"],
+["q","Fridge explorer","Put the elf on a safe shelf in the fridge.","I missed the North Pole weather.","Explorador do frigorífico","Põe o duende numa prateleira segura do frigorífico.","Tinha saudades do tempo do Polo Norte."],
+["q","Cereal snowstorm","Sprinkle a little cereal around the elf and a bowl.","A tiny breakfast avalanche happened.","Tempestade de cereais","Espalha um pouco de cereais à volta do duende e de uma taça.","Houve uma mini avalanche ao pequeno-almoço."],
+["q","Book critic","Pose the elf reading a book upside down.","Plot twist: I cannot read upside down.","Crítico literário","Põe o duende a ler um livro ao contrário.","Reviravolta: não consigo ler ao contrário."],
+["q","Shoe train","Line up shoes and put the elf in the first one.","All aboard the Shoe-Shoe Express!","Comboio de sapatos","Põe os sapatos em fila e o duende no primeiro.","Todos a bordo do Expresso Sapatinho!"],
+["q","Tissue mountain","Stack tissues like a mountain and perch the elf on top.","I conquered Mount Tissue.","Montanha de lenços","Empilha lenços de papel como uma montanha e põe o duende no topo.","Conquistei o Monte Lenço."],
+["q","Tiny laundry","Hang doll clothes on a low string, away from toddlers.","Laundry day in the North Pole.","Roupa a secar","Estende roupa de boneca num fio baixo, longe dos mais pequenos.","Dia de lavar a roupa no Polo Norte."],
+["q","Remote control hostage","Place the elf on the TV remote with a paper sign.","Movie night requires popcorn.","Comando sequestrado","Põe o duende em cima do comando da TV com um cartaz de papel.","Noite de cinema exige pipocas."],
+["q","Toothbrush inspector","Set the elf beside the toothbrushes, without touching the bristles.","Sparkle inspection complete.","Inspetor de escovas","Põe o duende ao lado das escovas de dentes, sem tocar nas cerdas.","Inspeção ao brilho concluída."],
+["q","Cup tower","Stack paper cups and place the elf at the summit.","I built a skyscraper overnight.","Torre de copos","Empilha copos de papel e põe o duende lá no alto.","Construí um arranha-céus durante a noite."],
+["q","Elf selfie","Pose the elf with a toy phone and a paper selfie frame.","No autographs, please.","Selfie do duende","Põe o duende com um telemóvel de brincar e uma moldura de selfie em papel.","Autógrafos não, por favor."],
+["n","Biscuit shrinking machine","Make a cardboard tunnel: regular biscuits go in, mini biscuits come out.","My invention is working TOO well!","Máquina de encolher bolachas","Faz um túnel de cartão: entram bolachas normais, saem mini bolachas.","A minha invenção funciona BEM DEMAIS!"],
+["n","Potato witness protection","Draw faces on potatoes; the elf interviews one.","Nobody saw what happened to the chips.","Batatas sob proteção","Desenha caras em batatas; o duende entrevista uma delas.","Ninguém viu o que aconteceu às batatas fritas."],
+["n","Milk gone bad","Tape an angry paper face to the milk carton.","The milk has developed an attitude.","O leite rebelde","Cola uma cara zangada de papel no pacote do leite.","O leite ganhou mau feitio."],
+["n","Popcorn club","Scatter popcorn on a tray; the elf wears paper headphones.","Club Popcorn is OPEN!","Discoteca das pipocas","Espalha pipocas num tabuleiro; o duende usa auscultadores de papel.","A Discoteca Pipoca está ABERTA!"],
+["n","DJ Marshmallow","Draw faces on marshmallows; the elf DJs from a small box.","DJ Elfie drops the beat.","DJ Marshmallow","Desenha caras em marshmallows; o duende é DJ numa caixinha.","O DJ Duende põe toda a gente a dançar."],
+["n","Dinosaur kidnapping","A toy dinosaur holds the elf; leave a ransom demand for a drawing.","Send one dinosaur portrait to negotiate.","Raptado por um dinossauro","Um dinossauro de brincar segura o duende; deixa um pedido de resgate: um desenho.","Mandem um retrato do dinossauro para negociar."],
+["n","Toy police arrest","Toy police cars surround the elf and some biscuit crumbs.","Arrested for excessive snacking.","Preso pela polícia","Carros de polícia de brincar cercam o duende e umas migalhas.","Preso por excesso de lanches."],
+["n","The great toilet-roll escape","Build a tunnel of empty paper rolls (no bathroom mess).","I tunnelled out of bedtime.","A grande fuga","Faz um túnel com rolos de papel vazios (sem confusão na casa de banho).","Fugi da hora de deitar por um túnel."],
+["n","Underpants superhero","Make a paper cape and pose the elf with clean doll underwear.","Captain Underpants has arrived.","Super-herói de cuecas","Faz uma capa de papel e põe o duende com cuecas de boneca lavadas.","Chegou o Capitão Cuecas!"],
+["n","Crisp ironing","Place a cold, unplugged toy iron beside a crisp packet.","I fixed the wrinkles.","Batatas passadas a ferro","Põe um ferro de brincar, frio e desligado, ao lado de um pacote de batatas fritas.","Tirei as rugas todas."],
+["n","Googly-eye invasion","Put removable paper eyes on a few pantry boxes.","Everything is watching me.","Invasão de olhos","Cola olhos de papel removíveis em algumas caixas da despensa.","Está tudo a olhar para mim."],
+["n","Frozen toy rescue","Put a toy in a sealed clear container with ice cubes.","Please rescue my frozen friend!","Resgate gelado","Põe um brinquedo num recipiente transparente fechado com cubos de gelo.","Salvem o meu amigo congelado!"],
+["n","Tiny graffiti","Write a silly message on a removable sticky note on the mirror.","Mirror, mirror, who is the silliest?","Mini grafíti","Escreve uma mensagem divertida num post-it no espelho.","Espelho meu, espelho meu, há alguém mais tonto do que eu?"],
+["n","Elf vs. vacuum","Pose the elf behind a stationary, unplugged vacuum.","I defeated the giant dust monster.","Duende contra o aspirador","Põe o duende atrás do aspirador, parado e desligado.","Derrotei o monstro gigante do pó."],
+["n","Toilet-paper tree","Drape a little toilet paper over the lower tree branches.","I decorated it my way.","Árvore de papel higiénico","Pendura um pouco de papel higiénico nos ramos de baixo da árvore.","Decorei-a à minha maneira."],
+["p","Wizard elf","Add a paper scarf and a paintbrush broom, safely propped.","I solemnly swear I am up to Christmas mischief.","Duende feiticeiro","Junta um cachecol de papel e uma vassoura feita com um pincel, bem apoiada.","Juro solenemente que só faço travessuras de Natal."],
+["p","Candy-cane golf","Make a paper green and use a candy cane as the putter.","North Pole Open Championship.","Golfe com bengalas","Faz um relvado de papel e usa uma bengala de doce como taco.","Campeonato Aberto do Polo Norte."],
+["p","Elf zipline","Secure a ribbon between two fixed points; the elf rides in a paper basket.","Express delivery!","Slide do duende","Prende uma fita entre dois pontos fixos; o duende viaja num cestinho de papel.","Entrega expresso!"],
+["p","Sledging championship","Build a cardboard sled and a cotton-wool snow slope.","Gold medal for fastest elf.","Campeonato de trenó","Faz um trenó de cartão e uma pista de neve de algodão.","Medalha de ouro para o duende mais rápido."],
+["p","Scooter grand prix","Make a paper racecourse for toy scooters.","Ready, steady, ELF!","Grande Prémio de trotinetes","Faz uma pista de corrida em papel para trotinetes de brincar.","Preparar, apontar, DUENDE!"],
+["p","Toilet-roll igloo","Arrange empty paper rolls into an igloo.","My holiday home is complete.","Iglu de rolos","Monta um iglu com rolos de papel vazios.","A minha casa de férias está pronta."],
+["p","S-ELF-ie booth","Create a paper backdrop, tiny props and a selfie sign.","Welcome to my photo studio.","Cabine de fotos","Faz um cenário de papel, pequenos adereços e um cartaz de selfie.","Bem-vindos ao meu estúdio fotográfico."],
+["p","North Pole sushi","Make pretend sushi from cereal treats and sweets.","Fresh from the North Pole kitchen.","Sushi do Polo Norte","Faz sushi a fingir com barritas de cereais e doces.","Acabadinho de sair da cozinha do Polo Norte."],
+["p","Elf movie premiere","Build a mini cinema with paper tickets and popcorn.","Tonight only: Elf Returns.","Estreia de cinema","Monta um mini cinema com bilhetes de papel e pipocas.","Só esta noite: O Regresso do Duende."],
+["p","Elf camping","Pitch a tiny tent from folded paper and cloth.","The wilderness is terrifying. I saw a sock.","Acampamento","Monta uma tenda pequenina com papel dobrado e um pano.","A natureza é assustadora. Vi uma meia."],
+["p","Snowball battle","Use cotton balls as snowballs; toys defend a fort.","We demand a snowball ceasefire.","Batalha de bolas de neve","Usa bolas de algodão como bolas de neve; os brinquedos defendem um forte.","Exigimos um cessar-fogo de bolas de neve."],
+["p","Toy hospital","Bandage the elf loosely with paper; toys play doctors.","Diagnosis: too much fun.","Hospital dos brinquedos","Enfaixa o duende com papel, sem apertar; os brinquedos são os médicos.","Diagnóstico: diversão a mais."],
+["p","Gingerbread crime scene","Place a broken biscuit on a tray with paper evidence markers.","Who ate the evidence?","Cena do crime","Põe uma bolacha partida num tabuleiro com marcadores de provas em papel.","Quem comeu as provas?"],
+["p","Space mission","Build a cardboard rocket with foil stars.","Mission Control: send biscuits.","Missão espacial","Constrói um foguetão de cartão com estrelas de papel de alumínio.","Controlo da Missão: mandem bolachas."],
+["p","Christmas bakery disaster","Dust a tray with flour; the elf stands beside a miniature rolling pin.","I may have overdone the snow.","Desastre na pastelaria","Polvilha um tabuleiro com farinha; o duende fica ao lado de um rolo da massa pequenino.","Acho que exagerei na neve."],
+["t","Fake Wi-Fi ransom","The elf holds a clue to a pretend Wi-Fi password. Don’t change the real one.","Solve the cipher to earn the pretend password.","Resgate do Wi-Fi","O duende segura uma pista para uma palavra-passe a fingir. Não mudes a verdadeira.","Resolvam a cifra para ganhar a palavra-passe a fingir."],
+["t","Elf job interview","Create a mini CV: skills include biscuit theft.","Seeking CEO position: Chief Elf Officer.","Entrevista de emprego","Faz um mini currículo: as competências incluem roubar bolachas.","Candidato ao cargo de Diretor-Geral dos Duendes."],
+["t","North Pole parking fine","Put a fake parking ticket on a toy car.","Illegal sleigh parking: 500 candy canes.","Multa de estacionamento","Põe uma multa a fingir num carrinho de brincar.","Trenó mal estacionado: 500 bengalas de doce."],
+["t","Elf influencer","Stage a paper ring light and an absurd product review.","Sponsored by absolutely nobody.","Duende influencer","Monta um anel de luz de papel e uma análise absurda a um produto.","Patrocinado por absolutamente ninguém."],
+["t","Elf detective board","Use yarn and paper clues on cardboard.","Case file 001: The Missing Cookie.","Quadro de detetive","Usa lã e pistas de papel num cartão.","Processo 001: A Bolacha Desaparecida."],
+["t","Elf podcast","Set up a toy microphone and a paper episode cover.","Episode 1: Why humans sleep so much.","Podcast do duende","Monta um microfone de brincar e uma capa de episódio em papel.","Episódio 1: Porque é que os humanos dormem tanto?"],
+["t","Elf school report","Give the elf grades in mischief, naps and stealth.","A+ in chaos. F in subtlety.","Boletim escolar","Dá notas ao duende em travessuras, sestas e discrição.","Excelente em caos. Insuficiente em discrição."],
+["t","Elf motivational speaker","Put the elf at a podium addressing stuffed toys.","Believe in your elf!","Orador motivacional","Põe o duende num púlpito a falar para os peluches.","Acreditem no duende que há em vós!"],
+["t","Fake breaking news","Make a paper news bulletin about the elf’s antics.","BREAKING: Elf spotted in cereal aisle.","Notícias de última hora","Faz um boletim de notícias em papel sobre as travessuras do duende.","ÚLTIMA HORA: duende avistado no corredor dos cereais."],
+["t","Elf escape room","Create three paper clues leading to a hidden note.","You have 10 minutes to save Christmas.","Escape room do duende","Cria três pistas em papel que levam a um bilhete escondido.","Têm 10 minutos para salvar o Natal."],
+["t","Elf conspiracy theory","Create a ridiculous corkboard about missing marshmallows.","The evidence points to the teddy bear.","Teoria da conspiração","Faz um quadro ridículo sobre os marshmallows desaparecidos.","As provas apontam para o urso de peluche."],
+["t","Elf product launch","Invent a fake product: invisible snow.","Now with 100% less visibility.","Lançamento de produto","Inventa um produto a fingir: neve invisível.","Agora com 100% menos visibilidade."],
+["t","Elf legal trial","Toys act as the jury for a biscuit theft.","I plead the fifth cookie.","Julgamento do duende","Os brinquedos são o júri no caso do roubo das bolachas.","Sou inocente. Pelo menos da quinta bolacha."],
+["t","Elf coding bug","Print mock code: if cookies > 0: eat_all().","Production incident: cookies vanished.","Erro no código","Imprime código a fingir: if bolachas > 0: comer_todas().","Incidente em produção: as bolachas desapareceram."],
+["t","Elf meme factory","Give the elf blank meme templates to caption.","Caption this disaster.","Fábrica de memes","Dá ao duende modelos de memes em branco para legendar.","Legendem este desastre."],
+["t","Elf art critic","The elf reviews a doodle with absurd seriousness.","Bold use of crayons. Very avant-garde.","Crítico de arte","O duende analisa um rabisco com uma seriedade absurda.","Uso ousado dos lápis de cera. Muito vanguardista."],
+["t","Elf treasure cipher","Hide a Caesar-shift note with a +3 key. Answer: COOKIE.","Decode: FRRNLH (shift back 3).","Cifra do tesouro","Esconde um bilhete com a cifra de César, chave +3. Resposta: BOLACHA.","Decifrem: ERODFKD (recuem 3 letras)."],
+["t","Elf annual performance review","Write humorous targets for pranks and kindness.","Mischief up 200%. Productivity unclear.","Avaliação anual","Escreve objetivos divertidos para travessuras e bondade.","Travessuras subiram 200%. Produtividade: pouco clara."],
+["t","Elf reality TV","Set up a toy audience and an elimination vote.","Tonight: Who Ate the Gingerbread?","Reality show do duende","Monta uma plateia de brinquedos e uma votação de eliminação.","Esta noite: Quem Comeu o Bolo de Gengibre?"],
+["t","Elf apology press conference","The elf stands at a podium apologising for a glitter-free mess.","I take full responsibility. Mostly.","Conferência de imprensa","O duende num púlpito pede desculpa por uma confusão sem purpurinas.","Assumo toda a responsabilidade. Mais ou menos."]];
+IDEAS.forEach(q=>{const c=ICAT[q[0]];
+ LANG.en.S.push([q[1],q[2],null,q[3],c[0]+" · "+c[2],q[0]]);
+ LANG.pt.S.push([q[4],q[5],null,q[6],c[1]+" · "+c[3],q[0]])});
 // ---------- bilingual printable sheets, built as blocks packed onto A4 ----------
 const x=(en,pt)=>st.lang==="pt"?pt:en;
 const ln=n=>'<div class="ln"></div>'.repeat(n);
@@ -595,13 +711,13 @@ function pack(blocks,ff){const pages=[];
 const actLabel=(d,name)=>t.dayShort(d)+" · "+esc(name);
 function blocksFor(id,d){const bl=R[id].b(d);return bl}
 function activityBlocks(kind,d){
- if(kind==="e"){const sc=scene(d),s=L.S[sc-1];return [noteCard(d)].concat(...SE[sc].map(id=>blocksFor(id,d).map((b,i)=>i?b:relabel(b,actLabel(d,s[0])))))}
+ if(kind==="e"){const sc=scene(d),s=L.S[sc-1];return [noteCard(d)].concat(...(SE[sc]||[]).map(id=>blocksFor(id,d).map((b,i)=>i?b:relabel(b,actLabel(d,s[0])))))}
  const n=L.N[d-1];return [].concat(...SN[d].map(id=>blocksFor(id,d).map((b,i)=>i?b:relabel(b,actLabel(d,n[0])))))}
 const relabel=(b,l)=>Object.assign({},b,{label:l});
 const answersFor=ids=>ids.map(id=>R[id]&&R[id].ans?R[id].ans():null).filter(Boolean);
 function everything(){let o=st.mode!=="noelf"?R.notes.b():[],seen=new Set();
  for(let d=1;d<=24;d++){
-  if(st.mode!=="noelf"){const sc=scene(d),s=L.S[sc-1];SE[sc].forEach(id=>{if(!seen.has(id)){seen.add(id);o=o.concat(blocksFor(id,d).map((b,i)=>i?b:relabel(b,actLabel(d,s[0]))))}})}
+  if(st.mode!=="noelf"){const sc=scene(d),s=L.S[sc-1];(SE[sc]||[]).forEach(id=>{if(!seen.has(id)){seen.add(id);o=o.concat(blocksFor(id,d).map((b,i)=>i?b:relabel(b,actLabel(d,s[0]))))}})}
   if(st.mode!=="elf"){const n=L.N[d-1];SN[d].forEach(id=>{if(!seen.has(id)){seen.add(id);o=o.concat(blocksFor(id,d).map((b,i)=>i?b:relabel(b,actLabel(d,n[0]))))}})}}
  ["letters","tiny","pa","pb","pc","pd","scene","countdown","plan"].forEach(k=>{o=o.concat(R[k].b(st.sel))});
  return o}
@@ -611,7 +727,16 @@ en:{count:(left,c)=>(left>0?left+(left===1?" day":" days")+" until door 1 · ":"
  door:(d,date,s)=>"Door "+d+", "+date+(s===2?", done":s===1?", partly done":""),
  withElf:"With the elf",without:"Without the elf",
  setup:d=>"Set up the night before ("+(d>1?(d-1)+" Dec":"30 Nov")+"):",
- swap:"Swap for another elf scene",spare:" (spare)",
+ swap:"Change this day’s elf activity",spare:" (spare)",browse:"Browse the idea library",printNote:"Print the elf note",fromBook:"Inspiration book",
+ iAll:"One scene for the whole family. Older children can help set it up for the younger ones.",iTeen:"Best for ages 9+ and teens. Younger children can be the audience.",
+ lockH:"1 December is always the Hello day: the elf arrives.",lockG:"24 December is always the Goodbye day: the elf says goodbye.",
+ grpCal:"Advent calendar activities",grpBook:"Inspiration book",
+ libH:"Idea library",libP:"Two folders of elf ideas. Pick any idea and put it on a day, or fill the whole calendar in one go. 1 December stays the Hello day and 24 December the Goodbye day.",
+ fillL:"Fill 2–23 December from",fillCal:"Advent calendar",fillBook:"Inspiration book",fillMix:"A mix of both",undo:"Undo",
+ filled:w=>"Filled 2–23 December from: "+w+".",fillNote:"With the inspiration book, weekends get the bigger photo setups. Teen ideas are only used if you’ve chosen ages 9–12 or 13+. Each press shuffles new ideas.",
+ tabCal:"Advent calendar",tabBook:"Inspiration book",all:"All",addTo:"Put on a day…",onDays:"On",added:(n,d)=>"“"+n+"” is now on "+d+".",
+ safety:"From the book: keep tiny sweets, string, batteries and small props away from toddlers. Use cold, unplugged appliances only and avoid risky climbing.",
+ calItem:"Has age versions and a printable sheet",
  did:"We did this",didOn:"Done",dayDone:"Day complete",
  noteL:"How did it go?",noteH:"Saved in this browser only",notePh:"Who joined in, what made everyone laugh, what to remember…",
  printE:"Print the elf note and sheet",printN:"Print the activity sheet",ans:"Answers for grown-ups",
@@ -627,7 +752,16 @@ pt:{count:(left,c)=>(left>0?(left===1?"Falta 1 dia":"Faltam "+left+" dias")+" pa
  door:(d,date,s)=>"Porta "+d+", "+date+(s===2?", feito":s===1?", meio feito":""),
  withElf:"Com o duende",without:"Sem o duende",
  setup:d=>"Preparar na noite anterior ("+(d>1?(d-1)+" dez":"30 nov")+"):",
- swap:"Trocar por outra cena",spare:" (extra)",
+ swap:"Mudar a atividade do duende deste dia",spare:" (extra)",browse:"Ver a biblioteca de ideias",printNote:"Imprimir o bilhete do duende",fromBook:"Livro de inspiração",
+ iAll:"Uma cena para toda a família. Os mais velhos podem ajudar a prepará-la para os mais novos.",iTeen:"Ideal a partir dos 9 anos e para adolescentes. Os mais novos podem ser o público.",
+ lockH:"O dia 1 de dezembro é sempre o dia do Olá: o duende chega.",lockG:"O dia 24 de dezembro é sempre o dia do Adeus: o duende despede-se.",
+ grpCal:"Atividades do calendário",grpBook:"Livro de inspiração",
+ libH:"Biblioteca de ideias",libP:"Duas pastas de ideias para o duende. Escolhe uma ideia e põe-na num dia, ou preenche o calendário todo de uma vez. O dia 1 de dezembro fica sempre o dia do Olá e o dia 24 o dia do Adeus.",
+ fillL:"Preencher de 2 a 23 de dezembro com",fillCal:"Calendário do Advento",fillBook:"Livro de inspiração",fillMix:"Um pouco de cada",undo:"Desfazer",
+ filled:w=>"Dias 2 a 23 preenchidos com: "+w+".",fillNote:"Com o livro de inspiração, os fins de semana ficam com as cenas maiores para foto. As ideias para adolescentes só entram se escolheres 9–12 ou 13+ anos. Cada clique baralha ideias novas.",
+ tabCal:"Calendário do Advento",tabBook:"Livro de inspiração",all:"Todas",addTo:"Pôr num dia…",onDays:"No dia",added:(n,d)=>"“"+n+"” está agora no dia "+d+".",
+ safety:"Do livro: guarda doces pequenos, fios, pilhas e adereços pequenos longe dos mais pequenos. Usa só eletrodomésticos frios e desligados e evita subir a sítios perigosos.",
+ calItem:"Tem versões por idade e folha para imprimir",
  did:"Fizemos isto",didOn:"Feito",dayDone:"Dia completo",
  noteL:"Como correu?",noteH:"Fica guardado só neste navegador",notePh:"Quem participou, o que vos fez rir, o que querem lembrar…",
  printE:"Imprimir o bilhete e a folha",printN:"Imprimir a folha da atividade",ans:"Soluções para os pais",
@@ -665,9 +799,38 @@ const ansBox=ids=>{const a=answersFor(ids);return a.length?'<details class="ans"
 const pbtn=(k,ids,lab)=>'<div class="prs"><button class="pbtn" data-pa="'+k+'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M7 14h10v7H7z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>'+lab+'</button><span class="ptl">'+ids.map(title).join(' · ')+'</span></div>';
 function renderDay(){
  const d=st.sel,sc=scene(d),s=L.S[sc-1],n=L.N[d-1],r=rec(d);
- const elf='<article class="card'+(r.e?' ok':'')+'"><svg class="celf" aria-hidden="true"><use href="#elf"/></svg><div class="kind">'+t.withElf+' <span class="tag">'+s[4]+'</span></div><h3>'+esc(s[0])+'</h3><p class="setup"><b>'+t.setup(d)+'</b> '+esc(s[1])+'</p><div class="note">“'+esc(s[3])+'”</div>'+ageRows(s[2])+pbtn("e",SE[sc],t.printE)+ansBox(SE[sc])+'<label class="swap" for="sw">'+t.swap+' <select id="sw">'+L.S.map((q,i)=>'<option value="'+(i+1)+'"'+(i+1===sc?' selected':'')+'>'+(i+1)+'. '+esc(q[0])+(DEF.includes(i+1)?'':t.spare)+'</option>').join('')+'</select></label><div class="cf">'+chk("e",!!r.e)+'</div></article>';
+ const elf='<article class="card'+(r.e?' ok':'')+(isIdea(sc)?' idea':'')+'"><svg class="celf" aria-hidden="true"><use href="#elf"/></svg><div class="kind">'+t.withElf+' <span class="tag">'+esc(s[4])+'</span>'+(isIdea(sc)?'<span class="tag ib">'+t.fromBook+'</span>':'')+'</div><h3>'+esc(s[0])+'</h3><p class="setup"><b>'+t.setup(d)+'</b> '+esc(s[1])+'</p><div class="note">“'+esc(s[3])+'”</div>'+(s[2]?ageRows(s[2]):'<p class="ibook">'+(s[5]==="t"?t.iTeen:t.iAll)+'</p>')+pbtn("e",SE[sc]||[],isIdea(sc)?t.printNote:t.printE)+ansBox(SE[sc]||[])+(LOCK[d]?'<p class="lock">🔒 '+(d===1?t.lockH:t.lockG)+'</p>':'<label class="swap" for="sw">'+t.swap+' <select id="sw">'+swapOpts(sc,d)+'</select></label><button class="lnk" data-go="lib">'+t.browse+'</button>')+'<div class="cf">'+chk("e",!!r.e)+'</div></article>';
  const ne='<article class="card ne'+(r.n?' ok':'')+'"><svg class="holly ch" aria-hidden="true"><use href="#holly"/></svg><div class="kind">'+t.without+'</div><h3>'+esc(n[0])+'</h3>'+ageRows(n[1])+pbtn("n",SN[d],t.printN)+ansBox(SN[d])+'<div class="cf">'+chk("n",!!r.n)+'</div></article>';
  $("day").innerHTML=(KN()?'<p class="hi">'+t.hi(KN())+'</p>':'')+'<div class="dayhd"><h2>'+L.head(d)+'</h2>'+(dayState(d)===2?'<span class="badge">★ '+t.dayDone+'</span>':'')+'</div>'+(st.mode!=="noelf"?elf:'')+(st.mode!=="elf"?ne:'')+'<div class="memo"><label for="memo">'+t.noteL+' <small>'+t.noteH+'</small></label><textarea id="memo" rows="3" placeholder="'+esc(t.notePh)+'">'+esc(r.txt||'')+'</textarea></div>';
+}
+const swapOpts=(sc,d)=>{const o=(i,q)=>'<option value="'+i+'"'+(i===sc?' selected':'')+'>'+esc(q[0])+(i<I0&&!DEF.includes(i)?t.spare:'')+'</option>';let a='<optgroup label="'+esc(t.grpCal)+'">',b='<optgroup label="'+esc(t.grpBook)+'">';
+ L.S.forEach((q,k)=>{const i=k+1;if(i===1||i===30)return;if(i<I0)a+=o(i,q);else b+=o(i,q)});return a+'</optgroup>'+b+'</optgroup>'};
+const setDay=(d,v)=>{if(LOCK[d])return;if(v===DEF[d-1])delete st.swap[d];else st.swap[d]=v};
+const usedOn=i=>{const o=[];for(let d=1;d<=24;d++)if(scene(d)===i)o.push(d);return o};
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+function bookPlan(){const teen=st.ages.includes("c")||st.ages.includes("d")||(st.kids||[]).some(k=>k.age==="c"||k.age==="d");
+ const pool={};["q","n","p","t"].forEach(c=>pool[c]=shuf(IDEAS.map((q,k)=>[q[0],k+I0]).filter(z=>z[0]===c).map(z=>z[1])));
+ const wk=teen?["q","n","t"]:["q","n"];let r=0;const out={},take=c=>pool[c].length?pool[c].shift():null;
+ for(let d=2;d<=23;d++){const we=wd(d)===0||wd(d)===6;let v=null;
+  if(we)v=take("p");
+  else{for(let k=0;!v&&k<wk.length;k++)v=take(wk[(r+k)%wk.length]);r++}
+  if(!v)v=take("p")||take("q")||take("n");out[d]=v}
+ return out}
+function fill(src){st.undo=Object.assign({},st.swap);
+ if(src==="cal")st.swap={};
+ else{const p=bookPlan();st.swap={};for(let d=2;d<=23;d++)if(src==="book"||d%2===0)setDay(d,p[d])}
+ st.fillMsg=t.filled(src==="cal"?t.fillCal:src==="book"?t.fillBook:t.fillMix);all()}
+function renderLib(){
+ const tab=st.libTab||"book",cat=st.libCat||"all",pt=st.lang==="pt";
+ const ids=[];if(tab==="cal"){for(let i=2;i<=29;i++)ids.push(i)}else IDEAS.forEach((q,k)=>{if(cat==="all"||q[0]===cat)ids.push(k+I0)});
+ const dayOpts='<option value="">'+t.addTo+'</option>'+Array.from({length:22},(_,k)=>{const d=k+2;return '<option value="'+d+'">'+esc(t.dayShort(d))+' · '+esc(L.S[scene(d)-1][0])+'</option>'}).join('');
+ $("libfill").innerHTML='<span class="lab">'+t.fillL+'</span><div class="seg dk">'+[["cal",t.fillCal],["book",t.fillBook],["mix",t.fillMix]].map(z=>'<button data-fill="'+z[0]+'">'+z[1]+'</button>').join('')+'</div>'+(st.undo?'<button class="btn alt" data-undo="1">↶ '+t.undo+'</button>':'')+'<p class="fmsg" role="status">'+(st.fillMsg?esc(st.fillMsg):'')+'</p><p class="fnote">'+t.fillNote+'</p>';
+ $("libtabs").innerHTML='<div class="seg dk">'+[["book",t.tabBook+" ("+IDEAS.length+")"],["cal",t.tabCal+" (28)"]].map(z=>'<button data-tab="'+z[0]+'" aria-pressed="'+(tab===z[0])+'">'+z[1]+'</button>').join('')+'</div>'+(tab==="book"?'<div class="chips lc">'+[["all",t.all]].concat(["q","n","p","t"].map(c=>[c,ICAT[c][pt?1:0]+' · '+ICAT[c][pt?3:2]])).map(z=>'<button class="chip lchip" data-cat="'+z[0]+'" aria-pressed="'+(cat===z[0])+'">'+z[1]+'</button>').join('')+'</div>':'');
+ $("libgrid").innerHTML=ids.map(i=>{const s=L.S[i-1],u=usedOn(i);
+  return '<article class="icard'+(i>=I0?' c-'+s[5]:'')+(u.length?' used':'')+'"><div class="itop"><span class="tag">'+esc(s[4])+'</span>'+(i>=I0?'<span class="inum">#'+String(i-I0+1).padStart(2,"0")+'</span>':'')+'</div><h3>'+esc(s[0])+'</h3><p class="isetup">'+esc(s[1])+'</p><div class="inote">“'+esc(s[3])+'”</div>'+(i<I0?'<p class="imeta">'+t.calItem+'</p>':'')+
+  '<div class="irow">'+(u.length?'<span class="ion">'+t.onDays+' '+u.map(d=>'<button class="dpill" data-d="'+d+'">'+esc(t.dayShort(d))+'</button>').join(' ')+'</span>':'')+'<select data-assign="'+i+'" aria-label="'+esc(t.addTo+' '+s[0])+'">'+dayOpts+'</select></div></article>'}).join('');
+ $("libsafe").textContent=tab==="book"?t.safety:"";
+ document.querySelectorAll("[data-libh]").forEach(e=>e.textContent=t.libH);$("libp").textContent=t.libP;
 }
 function renderList(){
  const ex=["notes","letters","tiny","pa","pb","pc","pd","scene","countdown","plan"];
@@ -677,7 +840,7 @@ function renderAns(){
  const acts=["code","mallow","detective","stars","recipe","hat"];
  $("answers").innerHTML='<h3>'+t.ansH+'</h3><p class="lead">'+t.ansP+'</p><div class="agrid">'+["pa","pb","pc","pd"].map(k=>'<details><summary>'+PZT(k)+'</summary><ol>'+PZf()[k][1].map(q=>'<li><b>'+esc(q[0])+':</b> '+esc(q[2])+'</li>').join('')+'</ol></details>').join('')+acts.map(k=>'<details><summary>'+title(k)+'</summary><p>'+esc(R[k].ans())+'</p></details>').join('')+'</div>';
 }
-const all=()=>{setLang();renderTop();renderCal();renderDay();renderList();renderAns();save()};
+const all=()=>{setLang();renderTop();renderCal();renderDay();renderLib();renderList();renderAns();save()};
 
 let cur=null,dls=null;
 function openSheets(key,ttl,blocks){
@@ -686,7 +849,7 @@ function openSheets(key,ttl,blocks){
  const saved=key!=="all"&&st.edits&&st.edits[key];
  $("pvin").innerHTML=saved||pages.join("");
  $("pvin").querySelectorAll(".sheet").forEach(s=>{s.contentEditable="true";s.spellcheck=false});
- $("rs").hidden=!saved;$("mmsg").textContent=t.edit+" "+t.dlHint;
+ $("rs").hidden=!saved;$("mmsg").textContent=t.edit+(dls?" "+t.dlHint:"");
  $("modal").classList.add("on");$("mx").focus();requestAnimationFrame(fit)}
 function fit(){const pv=$("pv"),inn=$("pvin"),sc=Math.min(1,(pv.clientWidth-24)/794);inn.style.width="794px";inn.style.transform="scale("+sc+")";inn.style.marginBottom=-(inn.offsetHeight*(1-sc))+"px"}
 const fitObs=new ResizeObserver(()=>{if($("modal").classList.contains("on"))fit()});
@@ -694,7 +857,7 @@ fitObs.observe($("pv"));
 const pagesHTML=()=>$("pvin").innerHTML.replace(/ contenteditable="true"/g,"").replace(/ spellcheck="false"/g,"");
 function fileFor(html,ttl){const css=$("sheetcss").textContent;return '<!DOCTYPE html><html lang="'+(st.lang==="pt"?"pt-PT":"en")+'"><head><meta charset="utf-8"><title>'+esc(ttl)+'</title><link href="https://fonts.googleapis.com/css2?family=Grandstander:wght@600;800&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet"><style>@page{size:A4;margin:0}body{margin:0;background:#cfcfcf}.bar{font:16px Nunito,Arial;text-align:center;padding:12px}.bar button{font:inherit;font-weight:800;padding:10px 20px;border:0;border-radius:10px;background:#c4232f;color:#fff;cursor:pointer}.sheet{margin:10mm auto;box-shadow:0 2px 8px rgba(0,0,0,.25)}@media print{.bar{display:none}body{background:#fff}.sheet{margin:0;box-shadow:none}}'+css+'</style></head><body>'+$("defs").outerHTML+'<div class="bar"><button onclick="print()">'+t.bar+'</button> &nbsp;'+t.barNote+'</div>'+html+'</body></html>'}
 const slug=s=>s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
-$("dl").onclick=async()=>{if(!dls){const blob=new Blob([fileFor(pagesHTML(),cur.ttl)],{type:"text/html"});const u=URL.createObjectURL(blob);const l=document.createElement("a");l.href=u;l.download=(cur.key==="all"?t.allFile:slug(cur.ttl))+".html";document.body.appendChild(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);$("mmsg").textContent=t.saved;return}
+$("dl").onclick=async()=>{if(!dls){$("mmsg").textContent=t.noDl;return}
  try{await dls.save({filename:(cur.key==="all"?t.allFile:slug(cur.ttl))+".html",data:fileFor(pagesHTML(),cur.ttl)});$("mmsg").textContent=t.saved}catch(e){$("mmsg").textContent=e&&e.code==="declined"?t.cancelled:t.failed}};
 $("rs").onclick=()=>{if(st.edits)delete st.edits[cur.key];save();reopen()};
 let reopen=()=>{};
@@ -705,20 +868,26 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("modal").classLis
 function openAct(k){const d=st.sel;const key=st.lang+":"+k+":"+d+":"+(k==="e"?scene(d):"");
  const name=k==="e"?L.S[scene(d)-1][0]:L.N[d-1][0];
  reopen=()=>openSheets(key,t.dayShort(d)+" · "+name,activityBlocks(k,d));reopen()}
-function openX(id){if(id==="all"){reopen=()=>openSheets("all",t.allTitle,everything())}else{reopen=()=>openSheets(st.lang+":"+id+(id==="plan"?":"+JSON.stringify(st.done).length:""),title(id),R[id].b(st.sel))}reopen()}
+function openX(id){if(id==="all"){reopen=()=>openSheets("all",t.allTitle,everything())}else{reopen=()=>openSheets(st.lang+":"+id+(id==="plan"?":"+JSON.stringify(st.done).length:"")+(id==="plan"||id==="notes"?":"+JSON.stringify(st.swap):""),title(id),R[id].b(st.sel))}reopen()}
 document.addEventListener("click",e=>{
  const b=e.target.closest("button");if(!b||b.closest("#pvin"))return;
  if(b.dataset.m){st.mode=b.dataset.m;all()}
  else if(b.dataset.lang){st.lang=b.dataset.lang;all()}
  else if(b.dataset.a){const a=b.dataset.a;st.ages=st.ages.includes(a)?st.ages.filter(x=>x!==a):st.ages.concat(a).sort();all()}
- else if(b.dataset.d){st.sel=+b.dataset.d;all();if(innerWidth<900)$("day").scrollIntoView({behavior:"smooth"})}
+ else if(b.dataset.d){st.sel=+b.dataset.d;all();if(innerWidth<900||b.classList.contains("dpill"))$("day").scrollIntoView({behavior:"smooth"})}
  else if(b.dataset.k){const r=rec(st.sel);r[b.dataset.k]=!r[b.dataset.k];st.done[st.sel]=r;all()}
  else if(b.dataset.pa)openAct(b.dataset.pa);
  else if(b.dataset.rk){st.kids.splice(+b.dataset.rk,1);all()}
  else if(b.id==="kadd")addKid();
  else if(b.dataset.px)openX(b.dataset.px);
+ else if(b.dataset.fill)fill(b.dataset.fill);
+ else if(b.dataset.undo){st.swap=st.undo||{};st.undo=null;st.fillMsg="";all()}
+ else if(b.dataset.tab){st.libTab=b.dataset.tab;all()}
+ else if(b.dataset.cat){st.libCat=b.dataset.cat;all()}
+ else if(b.dataset.go==="lib"){st.libTab=isIdea(scene(st.sel))?"book":"cal";all();$("library").scrollIntoView({behavior:"smooth"})}
 });
-document.addEventListener("change",e=>{if(e.target.id==="sw"){const v=+e.target.value;if(v===DEF[st.sel-1])delete st.swap[st.sel];else st.swap[st.sel]=v;all()}});
+document.addEventListener("change",e=>{if(e.target.id==="sw"){setDay(st.sel,+e.target.value);st.undo=null;all()}
+ else if(e.target.dataset.assign&&e.target.value){const i=+e.target.dataset.assign,d=+e.target.value;setDay(d,i);st.undo=null;st.fillMsg=t.added(L.S[i-1][0],t.dayShort(d));all()}});
 document.addEventListener("input",e=>{if(e.target.id==="memo"){const r=rec(st.sel);r.txt=e.target.value;st.done[st.sel]=r;save()}});
 function addKid(){const n=$("kn").value.trim();if(!n)return;const a=$("ka").value||"b";st.kids=(st.kids||[]).concat({name:n.slice(0,30),age:a});if(!st.ages.includes(a))st.ages=st.ages.concat(a).sort();$("kn").value="";all();$("kn").focus()}
 $("kn").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();addKid()}});

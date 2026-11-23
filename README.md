@@ -1,34 +1,25 @@
-# Christmas Advent Planner · Calendário do Advento
+# Christmas Advent Planner / Calendário do Advento
 
-A day-by-day Christmas guide for families, 1–24 December, in **English** and **European Portuguese**.
+A day-by-day Christmas advent guide for families, from 1 to 24 December, in English and European Portuguese.
 
-Um guia de Natal dia a dia para famílias, de 1 a 24 de dezembro, em **inglês** e **português de Portugal**.
+## Features
 
-## What's inside · O que tem
+- A 24-door calendar where every day has an elf activity and a no-elf family activity.
+- Age versions for 2–5, 6–8, 9–12 and 13+, plus children's names on the cards and sheets.
+- Printable A4 sheets: elf notes, puzzles, colouring pages and an advent plan.
+- **Idea library** with two folders:
+  - **Advent calendar:** 28 elf activities with age versions and printable sheets.
+  - **Inspiration book:** 65 funny elf ideas sorted into quick, naughty, photo-worthy and teen humour.
+- Put any idea on any day, or fill 2–23 December from the calendar, the book or a mix of both, with an undo button.
+- 1 December is always the Hello day and 24 December is always the Goodbye day.
+- Progress, notes and choices are saved in the browser (localStorage).
 
-- 24 doors in order, each with an elf activity and a no-elf family activity  
-  24 portas por ordem, cada uma com uma atividade com o duende e outra sem duende
-- Versions for ages 2–5, 6–8, 9–12 and 13+ · Versões para os 2–5, 6–8, 9–12 e 13+ anos
-- Children's names used in the greeting and on the printables · Nomes das crianças na saudação e nas folhas
-- Tick off each activity and write how it went · Marcar cada atividade e escrever como correu
-- A printable A4 sheet for every activity, editable before printing · Uma folha A4 por atividade, editável antes de imprimir
-- Parents' guide with puzzle answers · Guia para os pais com as soluções dos enigmas
+## Run it
 
-Progress, names and notes are saved in the browser (localStorage) only.  
-O progresso, os nomes e as notas ficam guardados só no navegador (localStorage).
+It's a single file with no build step. Open `index.html` in a browser.
 
-## Publish on GitHub Pages · Publicar no GitHub Pages
+To publish it on GitHub Pages, push this folder to a repository and go to **Settings → Pages**. Choose the main branch, root folder.
 
-1. Create a new repository and upload the contents of this folder.  
-   Cria um repositório novo e carrega o conteúdo desta pasta.
-2. Go to **Settings → Pages**, choose **Deploy from a branch**, branch `main`, folder `/ (root)`, and save.  
-   Vai a **Settings → Pages**, escolhe **Deploy from a branch**, ramo `main`, pasta `/ (root)` e guarda.
-3. After a minute the app is live at `https://<your-user>.github.io/<repo-name>/`.  
-   Passado um minuto, a app fica em `https://<o-teu-utilizador>.github.io/<nome-do-repo>/`.
+## Credits
 
-## Files · Ficheiros
-
-- `index.html` — the whole app in one file (no build step) · a app inteira num só ficheiro
-- `printables/` — all sheets as ready-to-print PDFs (blank, without names) · todas as folhas em PDF, em branco
-
-Fonts: Grandstander and Nunito from Google Fonts.
+Activities are adapted from the “24 Days of Christmas Magic” calendar and “The Christmas Elf” activity book. Inspiration ideas come from “The Big Book of Funny Elf Pranks”.
