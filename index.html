@@ -166,7 +166,9 @@ details.ans summary,#answers summary{cursor:pointer;font-weight:800}
 .modal{position:fixed;inset:0;background:rgba(5,20,14,.7);display:none;z-index:9;padding:16px}
 .modal.on{display:flex;flex-direction:column;align-items:center}
 .mbar{width:min(820px,100%);display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--paper);color:var(--ink);border-radius:14px 14px 0 0;padding:10px 14px}
-.mbar h3{flex:1;font-size:20px}
+.mbar h3{flex:1;font-size:20px;line-height:1.2}
+@media(max-width:600px){.mbar h3{flex-basis:100%}.mbar .mp{flex-basis:100%;margin-top:-6px}.mbar .btn.big{flex:1}}
+@media print{@page{size:A4;margin:0}html.printing body{background:#fff!important}html.printing body>*:not(#modal):not(#defs){display:none!important}html.printing #modal{position:static;display:block!important;background:none;padding:0}html.printing .mbar{display:none!important}html.printing .pv{overflow:visible;background:none;padding:0;width:auto;border-radius:0}html.printing .pvin{transform:none!important;width:auto!important;margin:0!important}html.printing .pvin .sheet{margin:0!important;box-shadow:none!important}html.printing .pvin .sheet:last-child{break-after:auto;page-break-after:auto}}
 .pv{width:min(820px,100%);flex:1;overflow:auto;background:#d8d2c4;border-radius:0 0 14px 14px;padding:12px}
 .pvin{transform-origin:0 0}
 .pvin .sheet{margin-bottom:12px;box-shadow:0 2px 6px rgba(0,0,0,.2)}
@@ -743,7 +745,7 @@ en:{count:(left,c)=>(left>0?left+(left===1?" day":" days")+" until door 1 · ":"
  view:"Preview and print",allT:"Everything in one file",allD:"Every activity sheet for the days you chose, plus the extras, packed several to a page. Each sheet appears once.",
  pages:n=>n+(n===1?" A4 page":" A4 pages"),dayShort:d=>d+" Dec",
  edit:"Click any text on the sheet to change it before printing.",reset:"Undo my changes",
- dlHint:"Downloads a print-ready file. Open it and press Print.",noDl:"Downloading isn’t available in this view. Open the page on claude.ai, or use the PDF pack from the chat.",
+ dlHint:"Downloads a print-ready file. Open it and press Print.",prBtn:"Print or save as PDF",prHint:"Opens your device’s print window. Choose A4 and no margins, or save as a PDF to print later.",noDl:"Downloading isn’t available in this view. Open the page on claude.ai, or use the PDF pack from the chat.",
  saved:"Saved. Open the file in your browser and press Print.",cancelled:"Download cancelled.",failed:"Couldn’t download here. Use the PDF pack from the chat instead.",
  allFile:"christmas-printables",allTitle:"Christmas printables",bar:"Print",barNote:"A4, no margins, background graphics on.",title:"Christmas Advent Planner",
  kids:"Children’s names",kidPh:"Name",add:"Add",rm:"Remove",hi:n=>"Hi "+n+"!",
@@ -768,7 +770,7 @@ pt:{count:(left,c)=>(left>0?(left===1?"Falta 1 dia":"Faltam "+left+" dias")+" pa
  view:"Ver e imprimir",allT:"Tudo num só ficheiro",allD:"Todas as folhas das atividades dos dias escolhidos, mais os extras, várias por página. Cada folha aparece uma só vez.",
  pages:n=>n+(n===1?" página A4":" páginas A4"),dayShort:d=>d+" dez",
  edit:"Clica em qualquer texto da folha para o mudar antes de imprimir.",reset:"Desfazer as minhas alterações",
- dlHint:"Descarrega um ficheiro pronto a imprimir. Abre-o e carrega em Imprimir.",noDl:"Não é possível descarregar nesta vista. Abre a página no claude.ai, ou usa o PDF enviado na conversa.",
+ dlHint:"Descarrega um ficheiro pronto a imprimir. Abre-o e carrega em Imprimir.",prBtn:"Imprimir ou guardar em PDF",prHint:"Abre a janela de impressão do teu dispositivo. Escolhe A4 e sem margens, ou guarda em PDF para imprimir mais tarde.",noDl:"Não é possível descarregar nesta vista. Abre a página no claude.ai, ou usa o PDF enviado na conversa.",
  saved:"Guardado. Abre o ficheiro no navegador e carrega em Imprimir.",cancelled:"Transferência cancelada.",failed:"Não foi possível descarregar aqui. Usa o PDF enviado na conversa.",
  allFile:"folhas-de-natal",allTitle:"Folhas de Natal para imprimir",bar:"Imprimir",barNote:"A4, sem margens, com gráficos de fundo.",title:"Calendário do Advento",
  kids:"Nomes dos filhos",kidPh:"Nome",add:"Juntar",rm:"Tirar",hi:n=>"Olá, "+n+"!",
@@ -843,13 +845,18 @@ function renderAns(){
 const all=()=>{setLang();renderTop();renderCal();renderDay();renderLib();renderList();renderAns();save()};
 
 let cur=null,dls=null;
+const canPrint=(()=>{try{return window.self===window.top}catch(e){return false}})();
+const unprint=()=>document.documentElement.classList.remove("printing");
+addEventListener("afterprint",unprint);
+function printNow(){document.documentElement.classList.add("printing");try{window.print()}catch(e){unprint()}}
 function openSheets(key,ttl,blocks){
  cur={key,ttl};const pages=pack(blocks,key==="all");
  $("mt").textContent=ttl;$("mp").textContent=t.pages(pages.length);
  const saved=key!=="all"&&st.edits&&st.edits[key];
  $("pvin").innerHTML=saved||pages.join("");
  $("pvin").querySelectorAll(".sheet").forEach(s=>{s.contentEditable="true";s.spellcheck=false});
- $("rs").hidden=!saved;$("mmsg").textContent=t.edit+(dls?" "+t.dlHint:"");
+ $("rs").hidden=!saved;$("mmsg").textContent=t.edit+(dls?" "+t.dlHint:canPrint?" "+t.prHint:"");
+ $("dl").innerHTML=dls||!canPrint?'<span class="en">Download to print</span><span class="pt">Descarregar para imprimir</span>':esc(t.prBtn);
  $("modal").classList.add("on");$("mx").focus();requestAnimationFrame(fit)}
 function fit(){const pv=$("pv"),inn=$("pvin"),sc=Math.min(1,(pv.clientWidth-24)/794);inn.style.width="794px";inn.style.transform="scale("+sc+")";inn.style.marginBottom=-(inn.offsetHeight*(1-sc))+"px"}
 const fitObs=new ResizeObserver(()=>{if($("modal").classList.contains("on"))fit()});
@@ -857,12 +864,12 @@ fitObs.observe($("pv"));
 const pagesHTML=()=>$("pvin").innerHTML.replace(/ contenteditable="true"/g,"").replace(/ spellcheck="false"/g,"");
 function fileFor(html,ttl){const css=$("sheetcss").textContent;return '<!DOCTYPE html><html lang="'+(st.lang==="pt"?"pt-PT":"en")+'"><head><meta charset="utf-8"><title>'+esc(ttl)+'</title><link href="https://fonts.googleapis.com/css2?family=Grandstander:wght@600;800&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet"><style>@page{size:A4;margin:0}body{margin:0;background:#cfcfcf}.bar{font:16px Nunito,Arial;text-align:center;padding:12px}.bar button{font:inherit;font-weight:800;padding:10px 20px;border:0;border-radius:10px;background:#c4232f;color:#fff;cursor:pointer}.sheet{margin:10mm auto;box-shadow:0 2px 8px rgba(0,0,0,.25)}@media print{.bar{display:none}body{background:#fff}.sheet{margin:0;box-shadow:none}}'+css+'</style></head><body>'+$("defs").outerHTML+'<div class="bar"><button onclick="print()">'+t.bar+'</button> &nbsp;'+t.barNote+'</div>'+html+'</body></html>'}
 const slug=s=>s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"");
-$("dl").onclick=async()=>{if(!dls){$("mmsg").textContent=t.noDl;return}
+$("dl").onclick=async()=>{if(!dls){if(canPrint){printNow()}else $("mmsg").textContent=t.noDl;return}
  try{await dls.save({filename:(cur.key==="all"?t.allFile:slug(cur.ttl))+".html",data:fileFor(pagesHTML(),cur.ttl)});$("mmsg").textContent=t.saved}catch(e){$("mmsg").textContent=e&&e.code==="declined"?t.cancelled:t.failed}};
 $("rs").onclick=()=>{if(st.edits)delete st.edits[cur.key];save();reopen()};
 let reopen=()=>{};
 $("pvin").addEventListener("input",()=>{if(!cur||cur.key==="all")return;st.edits=st.edits||{};st.edits[cur.key]=pagesHTML();$("rs").hidden=false;save()});
-$("mx").onclick=()=>$("modal").classList.remove("on");
+$("mx").onclick=()=>{unprint();$("modal").classList.remove("on")};
 $("modal").addEventListener("click",e=>{if(e.target.id==="modal")$("modal").classList.remove("on")});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("modal").classList.contains("on")){e.preventDefault();$("modal").classList.remove("on")}});
 function openAct(k){const d=st.sel;const key=st.lang+":"+k+":"+d+":"+(k==="e"?scene(d):"");
